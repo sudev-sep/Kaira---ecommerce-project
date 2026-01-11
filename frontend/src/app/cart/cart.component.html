@@ -1,0 +1,70 @@
+
+<app-header></app-header>
+<div class="container mt-5">
+
+  <h2 class="mb-4 text-center">Your Cart</h2>
+
+  <!-- If cart is empty -->
+  <div *ngIf="cartItems.length === 0" class="alert alert-info text-center">
+    Your cart is empty 🛒
+  </div>
+
+  <!-- Cart Table -->
+  <div *ngIf="cartItems.length > 0">
+    <table class="table table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Product</th>
+          <th>Price (₹)</th>
+          <th>Quantity</th>
+          <th>Total (₹)</th>
+          <th>remove</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of cartItems; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.product }}</td>
+          <td>{{ item.price }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.price * item.quantity }}</td>
+          <td> <button class="btn btn-danger btn-sm" (click)="removeFromCart(item.id)">Remove </button> </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Cart Summary -->
+    <div class="row mt-4">
+      <div class="col-md-6 offset-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Order Summary</h5>
+
+            <p class="d-flex justify-content-between">
+              <span>Total Items:</span>
+              <strong>{{ getTotalItems() }}</strong>
+            </p>
+
+            <p class="d-flex justify-content-between">
+              <span>Total Amount:</span>
+              <strong>₹ {{ getTotalPrice() }}</strong>
+            </p>
+
+            <button
+              class="btn btn-success w-100 mt-3"
+              (click)="purchase()"
+            >
+              Purchase
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<app-footer></app-footer>

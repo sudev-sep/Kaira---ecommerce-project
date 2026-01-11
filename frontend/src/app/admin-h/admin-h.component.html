@@ -1,0 +1,91 @@
+
+<app-header></app-header>
+
+<!-- <div *ngIf="section === 'customers'"> -->
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Customer Management</h2>
+
+  <button class="btn btn-primary" (click)="logoutview()">Logout</button>
+  <table class="table table-bordered table-striped table-dark text-center align-middle">
+    <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Customer ID</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+  <tbody>
+  <tr *ngFor="let customer of customers">
+    <td>{{ customer.first_name }}</td>
+    <td>{{ customer.last_name }}</td>
+    <td>{{ customer.username }}</td>
+    <td>{{ customer.email }}</td>
+    <td>{{ customer.phone_number }}</td>
+    <td>{{ customer.address }}</td>
+    <td>{{ customer.customer_id }}</td>
+    <td>
+      <button class="btn btn-danger btn-sm" (click)="deletecustomers(customer.id)">
+        DELETE
+      </button>
+    </td>
+  </tr>
+</tbody>
+  </table>
+</div>
+<!-- </div> -->
+
+<!-- <div *ngIf="section === 'sellers'"> -->
+
+  <button class="btn btn-primary mt-3 mb-3" (click)="addsellerView()">Add seller</button>
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Seller Management</h2>
+  <table class="table table-bordered table-striped table-dark text-center align-middle">
+    <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Shop Name</th>
+        <th>GST Number</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let seller of sellers">
+        <td>{{ seller?.first_name }}</td>
+        <td>{{ seller?.last_name }}</td>
+        <td>{{ seller?.username }}</td>
+        <td>{{ seller?.email }}</td>
+        <td>{{ seller?.shop_name }}</td>
+        <td>{{ seller?.gst_number }}</td>
+        <td>
+          <span class="badge bg-success" *ngIf="seller.is_approved">Approved</span>
+          <span class="badge bg-danger" *ngIf="!seller.is_approved">Pending</span>
+        </td>
+        <td>
+          <button
+            class="btn btn-primary btn-sm me-2"
+            (click)="approvesellers(seller.id)"
+            [disabled]="seller.is_approved"
+          >
+            APPROVE
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="deletesellers(seller.id)">
+            DELETE
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- </div> -->
+
+
+<app-footer></app-footer>

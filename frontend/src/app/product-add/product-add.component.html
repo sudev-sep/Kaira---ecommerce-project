@@ -1,0 +1,36 @@
+
+<app-header></app-header>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Add New Product</h2>
+
+  <form (ngSubmit)="onSubmit()" #productForm="ngForm" enctype="multipart/form-data" class="border p-4 rounded shadow bg-light">
+    <div class="mb-3">
+      <label class="form-label">Product Name</label>
+      <input type="text" class="form-control" name="name" [(ngModel)]="product.name" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Short Description</label>
+      <input type="text" class="form-control" name="short_description" [(ngModel)]="product.short_description">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Price</label>
+      <input type="number" class="form-control" name="price" [(ngModel)]="product.price" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Stock</label>
+      <input type="number" class="form-control" name="stock" [(ngModel)]="product.stock">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Image</label>
+      <input type="file" class="form-control" (change)="onFileSelected($event)">
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Add Product</button>
+  </form>
+</div>
+
+<app-footer></app-footer>

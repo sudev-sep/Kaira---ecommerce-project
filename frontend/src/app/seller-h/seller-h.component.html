@@ -1,0 +1,105 @@
+<app-header></app-header>
+
+<h1 class="text-center mt-3">Welcome to Seller Profile</h1>
+
+<div class="container mt-4" *ngIf="seller">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+
+      <h2 class="text-center mb-4">
+        Welcome, {{ seller?.first_name }} {{ seller?.last_name }}
+      </h2>
+
+      <div class="p-4 border rounded shadow-sm bg-light">
+        <p><strong>First name:</strong> {{ seller?.first_name }}</p>
+        <p><strong>Username:</strong> {{ seller?.username }}</p>
+        <p><strong>Email:</strong> {{ seller?.email }}</p>
+        <p><strong>Phone:</strong> {{ seller?.phone_number }}</p>
+        <p><strong>Shop Name:</strong> {{ seller?.shop_name }}</p>
+        <p><strong>GST Number:</strong> {{ seller?.gst_number }}</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-primary" (click)="logout()">logout</button>
+
+<div class="text-center mt-3">
+  <button routerLink="/add-product" class="btn btn-primary">Add Product</button>
+</div>
+
+<!-- EDIT FORM -->
+<form
+  *ngIf="seller"
+  (ngSubmit)="updateProfile()"
+  #editForm="ngForm"
+  class="container mt-4 p-4 border rounded shadow-sm bg-light">
+
+  <h3 class="text-center mb-4">Edit Profile</h3>
+
+  <div class="mb-3">
+    <label>First Name</label>
+    <input class="form-control" [(ngModel)]="seller.first_name" name="first_name">
+  </div>
+
+  <div class="mb-3">
+    <label>Last Name</label>
+    <input class="form-control" [(ngModel)]="seller.last_name" name="last_name">
+  </div>
+
+  <div class="mb-3">
+    <label>Email</label>
+    <input type="email" class="form-control" [(ngModel)]="seller.email" name="email">
+  </div>
+
+  <div class="mb-3">
+    <label>Phone Number</label>
+    <input class="form-control" [(ngModel)]="seller.phone_number" name="phone_number">
+  </div>
+
+  <div class="mb-3">
+    <label>Shop Name</label>
+    <input class="form-control" [(ngModel)]="seller.shop_name" name="shop_name">
+  </div>
+
+  <div class="mb-3">
+    <label>GST Number</label>
+    <input class="form-control" [(ngModel)]="seller.gst_number" name="gst_number">
+  </div>
+
+  <button class="btn btn-success w-100" type="submit">Update</button>
+</form>
+
+<!-- PRODUCT TABLE -->
+<table class="table table-striped mt-4 container" *ngIf="products && products.length > 0">
+  <thead>
+    <tr>
+      <th>Image</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Stock</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tr *ngFor="let product of products">
+    <td><img [src]="'http://127.0.0.1:8000/' + product.image" width="50"></td>
+    <td>{{ product.name }}</td>
+    <td>{{ product.short_description }}</td>
+    <td>{{ product.price }}</td>
+    <td>{{ product.stock }}</td>
+    <td>
+<button class="btn btn-primary btn-sm" [routerLink]="['/product-edit', product.id]">Edit</button>   
+<button class="btn btn-danger btn-sm ms-2" (click)="deleteProduct(product.id)">Delete</button>
+    </td>
+  </tr>
+
+</table>
+<div class="container mt-4" *ngIf="products && products.length === 0">
+  <h4 class="text-center">No products found. Click "Add Product" to create one.</h4>
+</div>
+
+
+<app-footer></app-footer>

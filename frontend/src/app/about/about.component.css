@@ -1,0 +1,12 @@
+.section-title {
+  font-weight: 600;
+}
+
+.tech-list li {
+  padding: 8px 0;
+  border-bottom: 1px dashed #ddd;
+}
+
+.tech-list li:last-child {
+  border-bottom: none;
+}

@@ -1,0 +1,15 @@
+#footer p {
+  line-height: 1.4;
+}
+
+#footer ul li {
+  margin-bottom: 4px;
+}
+
+#footer a {
+  text-decoration: none;
+}
+
+#footer img {
+  max-height: 24px;
+}

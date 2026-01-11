@@ -1,0 +1,39 @@
+<app-header></app-header>
+
+<section class="login-section d-flex align-items-center justify-content-center">
+  <div class="login-card">
+
+    <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" novalidate>
+      <h2 class="mb-4 text-center">Login</h2>
+
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="form-control"
+          required
+          [(ngModel)]="loginData.username">
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          required
+          [(ngModel)]="loginData.password">
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">
+        Login
+      </button>
+    </form>
+
+  </div>
+</section>
+
+<app-footer></app-footer>

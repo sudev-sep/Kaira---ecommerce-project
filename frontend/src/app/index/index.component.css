@@ -1,0 +1,53 @@
+.swiper {
+  width: 100%;
+  height: auto;
+  min-height: 320px;
+}
+
+.swiper-wrapper {
+  display: flex;
+}
+
+.swiper-slide {
+  height: auto;
+  display: flex;
+  justify-content: center;
+}
+
+
+
+.product-item {
+  height: 420px;              /* adjust card height */
+}
+
+.image-holder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-holder img {
+  height: 350px;
+  width: 290px;
+  object-fit: cover;          /* or contain if you prefer */
+}
+
+/* remaining 40% */
+.product-content {
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.zoom-hover {
+  overflow: hidden;
+}
+
+.zoom-hover img {
+  transition: transform 0.4s ease;
+}
+
+.zoom-hover:hover img {
+  transform: scale(1.08);
+}

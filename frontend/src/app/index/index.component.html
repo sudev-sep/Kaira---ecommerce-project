@@ -1,0 +1,55 @@
+<app-header></app-header>
+
+<section id="billboard" class="bg-light py-5 product-carousel">
+  <div class="container">
+
+    <div class="row justify-content-center mb-4">
+      <h1 class="section-title text-center">New Collections</h1>
+      <div class="col-md-6 text-center">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+      </div>
+    </div>
+
+    <div class="position-relative">
+
+      <div class="swiper product-swiper">
+        <div class="swiper-wrapper">
+
+          <div class="swiper-slide" *ngFor="let p of products">
+            <div class="product-item card h-100 border-0 zoom-hover">
+              <div class="image-holder position-relative">
+
+                <a [routerLink]="['/product', p.id]">
+                  <img [src]="p.image" [alt]="p.name" class="img-fluid w-100">
+                </a>
+
+                <div class="product-content text-center mt-3">
+                  <h5 class="text-uppercase fs-5">{{ p.name }}</h5>
+
+                  <a href="#" (click)="addToCart(p.id); $event.preventDefault()"
+                     class="text-decoration-none d-block">
+                    <span>{{ p.price | currency:'USD' }}</span>
+                    <span class="fw-semibold d-block">Add to cart</span>
+                  </a>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+
+      <div class="icon-arrow icon-arrow-left">
+        <svg width="50" height="50"><use xlink:href="#arrow-left"></use></svg>
+      </div>
+
+      <div class="icon-arrow icon-arrow-right">
+        <svg width="50" height="50"><use xlink:href="#arrow-right"></use></svg>
+      </div>
+
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>

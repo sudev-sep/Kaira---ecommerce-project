@@ -1,0 +1,54 @@
+<app-header></app-header>
+
+<div class="container mt-4">
+  <h2 class="mb-4">Add Seller</h2>
+
+<form #sellerForm="ngForm" (ngSubmit)="submit(sellerForm)">
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input class="form-control" [(ngModel)]="seller.username" name="username" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">First name</label>
+      <input class="form-control" [(ngModel)]="seller.first_name" name="first_name" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Last name</label>
+      <input class="form-control" [(ngModel)]="seller.last_name" name="last_name" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-control" [(ngModel)]="seller.email" name="email" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Shop name</label>
+      <input class="form-control" [(ngModel)]="seller.shop_name" name="shop_name" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">GST number</label>
+      <input class="form-control" [(ngModel)]="seller.gst_number" name="gst_number" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Phone number</label>
+      <input class="form-control" [(ngModel)]="seller.phone_number" name="phone_number" />
+    </div>
+
+    <div class="mb-3">
+  <label for="password" class="form-label">Password</label>
+  <input
+    type="password"
+    id="password"
+    name="password"
+    class="form-control"
+    [(ngModel)]="seller.password"
+    required
+  />
+</div>
+
+    <button class="btn btn-primary me-2" type="submit">Create</button>
+    <button class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>
+  </form>
+</div>
+
+
+<app-footer></app-footer>

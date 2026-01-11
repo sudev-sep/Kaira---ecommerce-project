@@ -1,0 +1,37 @@
+
+<app-header></app-header>
+<div class="container mt-4 p-4 border rounded shadow-sm bg-light">
+  <h3 class="text-center mb-4">Edit Product</h3>
+
+  <form (ngSubmit)="updateProduct()" #editProductForm="ngForm" enctype="multipart/form-data">
+
+    <div class="mb-3">
+      <label>Product Name</label>
+      <input class="form-control" [(ngModel)]="product.name" name="name" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Short Description</label>
+      <input class="form-control" [(ngModel)]="product.short_description" name="short_description">
+    </div>
+
+    <div class="mb-3">
+      <label>Price</label>
+      <input type="number" class="form-control" [(ngModel)]="product.price" name="price" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Stock</label>
+      <input type="number" class="form-control" [(ngModel)]="product.stock" name="stock">
+    </div>
+
+    <div class="mb-3">
+      <label>Upload Image</label>
+      <input type="file" class="form-control" (change)="onFileSelected($event)">
+    </div>
+
+    <button class="btn btn-success w-100" type="submit">Update Product</button>
+  </form>
+</div>
+
+<app-footer></app-footer>
