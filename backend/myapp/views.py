@@ -224,6 +224,11 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -262,7 +267,7 @@ class ProductEditView(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Product not found"}, status=404)
 
-        serializer = ProductSerializer(product, data=request.data, partial=True)
+        serializer = ProductSerializer(product, many=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -289,7 +294,7 @@ class SellerProductsView(APIView):
 
     def get(self, request):
         products = Product.objects.filter(seller=request.user.seller_profile)
-        serializer = ProductSerializer(products, many=True)
+        serializer = ProductSerializer(products, many=True, context={'request': request})
         return Response(serializer.data)
     
 

@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./admin-h.component.css']
 })
 export class AdminHComponent {
-  section: string = 'customers';
+  section: string = 'seller-data';
 customers: any[] = [];
 sellers: any[] = [];
 
@@ -18,12 +18,17 @@ constructor(private http: HttpClient, private authService: AuthService,
   private router: Router
 ) {}
 
+isLoggedIn = false;
+role: string | null = null;
+
 ngOnInit(): void {
-  // this.route.queryParams.subscribe(params => {
-  //   this.section = params['section'] || 'sellers';
-  // })
+  this.route.queryParams.subscribe(params => {
+    this.section = params['section'] || 'customer-data';
+  })
   this.fetchcustomers();
   this.fetchsellers();
+  this.isLoggedIn = !!localStorage.getItem('token');
+  this.role = localStorage.getItem('role');
 }
 
 fetchcustomers() {
@@ -46,10 +51,7 @@ deletecustomers(id: number) {
     });
 }
 
-logoutview() {
-  this.authService.logout();
-  alert('logged out successfully')
-}
+
 
 
 fetchsellers() {

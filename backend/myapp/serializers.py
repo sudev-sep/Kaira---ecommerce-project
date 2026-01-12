@@ -106,9 +106,15 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         request = self.context.get('request')
-        if obj.image:
-            return request.build_absolute_uri(obj.image.url)
-        return None
+        if not getattr(obj, "image", None):
+            return None
+        try:
+            url = obj.image.url
+        except Exception:
+            return None
+        if request:
+            return request.build_absolute_uri(url)
+        return url
 
     def create(self, validated_data):
         request = self.context['request']

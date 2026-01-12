@@ -243,17 +243,17 @@
             <!-- Admin -->
             <ul class="navbar-nav justify-content-end flex-grow-1 gap-1 gap-md-5 pe-3" *ngIf="isLoggedIn && role === 'admin'">
               <li class="nav-item"><a class="nav-link" routerLink="/"  >Home</a></li>
-              <li class="nav-item"><a class="nav-link" routerLink="/"  quaryparams="{ section: 'customer-data' }" >Home</a></li>
-              <li class="nav-item"><a class="nav-link" routerLink="/about">about</a></li>
-
+              <li class="nav-item"><a class="nav-link" [routerLink]="['/admin_h']" [queryParams]="{ section: 'customer-data' }"> Customer Data </a> </li>
+              <li class="nav-item"><a class="nav-link" [routerLink]="['/admin_h']" [queryParams]="{ section: 'seller-data' }"> seller Data </a> </li>  
               <li class="nav-item"><a class="nav-link" (click)="logout()">Logout</a></li>
             </ul>
 
             <!-- Seller -->
             <ul class="navbar-nav justify-content-end flex-grow-1 gap-1 gap-md-5 pe-3" *ngIf="isLoggedIn && role === 'seller'">
               <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
-              <li class="nav-item"><a class="nav-link" routerLink="/about">about</a></li>
-
+              <li class="nav-item"><a class="nav-link" [routerLink]="['/seller_h']" [queryParams]="{ section1: 'profile' }"> profile </a> </li>
+              <li class="nav-item"><a class="nav-link" [routerLink]="['/seller_h']" [queryParams]="{ section1: 'edit-profile' }">  Edit </a> </li>
+              <li class="nav-item"><a class="nav-link" [routerLink]="['/seller_h']" [queryParams]="{ section1: 'products' }"> Products </a> </li>
               <li class="nav-item"><a class="nav-link" (click)="logout()">Logout</a></li>
             </ul>
 
@@ -261,7 +261,8 @@
             <ul class="navbar-nav justify-content-end flex-grow-1 gap-1 gap-md-5 pe-3" *ngIf="isLoggedIn && role === 'customer'">
               <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
               <li class="nav-item"><a class="nav-link" routerLink="/about">about</a></li>
-
+              <li class="nav-item"><a class="nav-link" [routerLink]="['/customer_h']" [queryParams]="{ section2: 'cus-profile' }"> profile </a> </li>
+              <li class="nav-item"><a class="nav-link" [routerLink]="['/customer_h']" [queryParams]="{ section2: 'edit' }"> edit </a> </li>
               <li class="nav-item"><a class="nav-link" (click)="logout()">Logout</a></li>
              
             </ul>
@@ -271,13 +272,18 @@
 
       <div class="col-3 col-lg-auto">
         <ul class="list-unstyled d-flex m-0">
-          <li class="d-none d-lg-block">
-            <a href="index.html" class="text-uppercase mx-3">Wishlist <span class="wishlist-count">(0)</span></a>
-          </li>
-          <li class="d-none d-lg-block" *ngIf="isLoggedIn">
-              <a routerLink="/cart" class="text-uppercase mx-3">Cart <span class="cart-count">({{ cartCount$ | async }})</span>
-               </a>
-          </li>
+          
+         <li class="d-none d-lg-block" *ngIf="isLoggedIn">
+  <a routerLink="/cart" class="text-uppercase mx-3 cart-wrapper">
+    <span class="cart-icon">🛒</span>
+    <span
+      class="cart-badge"
+      *ngIf="(cartCount$ | async) as count"
+    >
+      {{ count }}
+    </span>
+  </a>
+</li>
 
           <li class="d-lg-none">
             <a href="#" class="mx-2">

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 
 
@@ -8,6 +9,10 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
+
+  // reactive role observable (keeps current role in sync)
+  private roleSubject = new BehaviorSubject<string | null>(localStorage.getItem('usertype'));
+  role$ = this.roleSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -31,6 +36,7 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('usertype');
     localStorage.removeItem('username');
+    this.setRole(null);
     this.router.navigate(['/login']);
   }
 
@@ -64,6 +70,15 @@ updateProduct(Id: number, productData: any) {
 getRole(): string | null {
   return localStorage.getItem('usertype');   // 'admin' | 'seller' | 'customer'
 }
+setRole(role: string | null) {
+  if (role) {
+    localStorage.setItem('usertype', role);
+  } else {
+    localStorage.removeItem('usertype');
+  }
+  this.roleSubject.next(role);
+}
+
 
 getUsername(): string | null {
   return localStorage.getItem('username');

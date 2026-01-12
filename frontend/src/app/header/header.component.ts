@@ -1,8 +1,8 @@
 // header.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { CartService } from '../services/cart.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 type UserRole = 'admin' | 'seller' | 'customer' | null;
 
@@ -10,10 +10,11 @@ type UserRole = 'admin' | 'seller' | 'customer' | null;
   selector: 'app-header',
   templateUrl: './header.component.html'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   isLoggedIn = false;
   role: UserRole = null;
+  private roleSub?: Subscription;
 
   cartCount$!: Observable<number>;
 
@@ -23,14 +24,11 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // auth state from localStorage via AuthService
-    this.isLoggedIn = this.authService.isLoggedIn();
-    const storedRole = this.authService.getRole();
-    this.role = (storedRole as UserRole) || null;
-    if (this.isLoggedIn) {
-     this.cartCount$ = this.cartService.cartCount$;
-    }
-
+    // subscribe to role changes so header updates reactively after login/logout
+    this.roleSub = this.authService.role$.subscribe(storedRole => {
+      this.role = (storedRole as UserRole) || null;
+      this.isLoggedIn = this.authService.isLoggedIn();
+    });
 
     // cart count observable for async pipe in template
     this.cartCount$ = this.cartService.cartCount$;
@@ -45,6 +43,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.roleSub?.unsubscribe();
+  }
+
   logout(): void {
     this.authService.logout();
   }
@@ -52,5 +54,4 @@ export class HeaderComponent implements OnInit {
 
   
 }
-
 

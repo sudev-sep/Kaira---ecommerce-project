@@ -44,8 +44,8 @@ urlpatterns = [
     path('api/cart/', views.CheckoutView.as_view(), name='cart'),
     path('api/checkout/', views .CheckoutView.as_view()),
     path('api/cart/remove/<int:item_id>/', views.RemoveFromCartView.as_view()),
+ ]
 
-    
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

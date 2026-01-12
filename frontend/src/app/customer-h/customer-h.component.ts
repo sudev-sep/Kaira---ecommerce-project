@@ -8,16 +8,16 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./customer-h.component.css']
 })
 export class CustomerHComponent implements OnInit {
-  // section2 = 'viewprofile';
+  section2 = 'cus-profile';
   editing = false;
   customer: any = null;
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    //  this.route.queryParams.subscribe(params => {
-    //   this.section2=params['section2']||'viewteacher'||'editprofile';
-    // })
+     this.route.queryParams.subscribe(params => {
+      this.section2=params['section2']||'cus-profile'||'edit';
+    })
     this.getProfile();
   }
 

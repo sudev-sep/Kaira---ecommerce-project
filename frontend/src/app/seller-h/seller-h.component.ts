@@ -11,6 +11,8 @@ import { AuthService } from '../services/auth.service';
 })
 export class SellerHComponent {
 // section2 = 'viewprofile';
+
+  section1: string = 'profile';
   editing = false;
   seller: any = null;
   products: any[] = [];
@@ -27,7 +29,11 @@ export class SellerHComponent {
     this.getProfile();
     this.loadProducts(); 
     this.getproduct();
+    this.route.queryParams.subscribe(params => {
+      this.section1 = params['section1'] || 'profile';
+    });
   }
+
 
   loadProducts() {
     this.http.get<any[]>('http://127.0.0.1:8000/api/seller/profile/products/').subscribe({

@@ -24,29 +24,32 @@ export class LoginComponent {
     if (form.invalid) return;
 
     this.authservice.Login(this.loginData).subscribe({
-      next :(res:any)=>{
-        console.log("login success",res);
+     next: (res: any) => {
+  console.log("login success", res);
 
-        localStorage.setItem('token',res.token);
-        localStorage.setItem('usertype', res.usertype);
-        localStorage.setItem('is_superuser', res.is_superuser);
-        
-        if (res.is_superuser || res.usertype === 'admin') {
-          console.log("admin_home");
-          this.router.navigate(['/admin_h']);
-        } 
-        else if (res.usertype === 'customer') {
-          console.log("customer_home");
-          this.router.navigate(['/customer_h']);
-        } 
-        else if (res.usertype === 'seller') {
-          console.log("seller_home");
-          this.router.navigate(['/seller_h']);
-        } 
-        else {
-          this.router.navigate(['/']);
-        }
-      },
+  localStorage.setItem('token', res.token);
+  localStorage.setItem('usertype', res.usertype);
+  localStorage.setItem('is_superuser', res.is_superuser);
+
+  localStorage.setItem(
+    'role',
+    res.is_superuser ? 'admin' : res.usertype
+  );
+
+  this.authservice.setRole(
+    res.is_superuser ? 'admin' : res.usertype
+  );
+
+  if (res.is_superuser || res.usertype === 'admin') {
+    this.router.navigate(['/admin_h']);
+  } else if (res.usertype === 'customer') {
+    this.router.navigate(['/customer_h']);
+  } else if (res.usertype === 'seller') {
+    this.router.navigate(['/seller_h']);
+  } else {
+  this.router.navigate(['/']);
+}
+    },
       error: (err: any) => {
         console.error( err,"//////////////////////");
         alert("Login failed");
