@@ -20,6 +20,7 @@ import { CartComponent } from './cart/cart.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { AboutComponent } from './about/about.component';
+import { ProductPageComponent } from './product-page/product-page.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { AboutComponent } from './about/about.component';
   HeaderComponent,
   FooterComponent,
   AboutComponent,
+  ProductPageComponent,
   ],
   imports: [
     BrowserModule,

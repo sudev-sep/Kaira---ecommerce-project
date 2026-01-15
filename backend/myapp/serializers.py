@@ -93,7 +93,7 @@ class SellerUpdateSerializer(serializers.ModelSerializer):
 # ---------------- PRODUCT ---------------- #
 
 class ProductSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
+    image = serializers.ImageField(required=False)
     seller = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
@@ -104,23 +104,17 @@ class ProductSerializer(serializers.ModelSerializer):
             'is_active', 'created_at'
         ]
 
-    def get_image(self, obj):
-        request = self.context.get('request')
-        if not getattr(obj, "image", None):
-            return None
-        try:
-            url = obj.image.url
-        except Exception:
-            return None
-        if request:
-            return request.build_absolute_uri(url)
-        return url
-
     def create(self, validated_data):
         request = self.context['request']
         validated_data['seller'] = request.user.seller_profile
         return super().create(validated_data)
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get('request')
+        if instance.image and request:
+            data['image'] = request.build_absolute_uri(instance.image.url)
+        return data
 
 # ---------------- CART ---------------- #
 

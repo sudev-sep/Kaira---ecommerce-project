@@ -1,8 +1,13 @@
 // header.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {  OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { CartService } from '../services/cart.service';
 import { Observable, Subscription } from 'rxjs';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
+
 
 type UserRole = 'admin' | 'seller' | 'customer' | null;
 
@@ -11,7 +16,7 @@ type UserRole = 'admin' | 'seller' | 'customer' | null;
   templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
+  searchQuery: string = '';
   isLoggedIn = false;
   role: UserRole = null;
   private roleSub?: Subscription;
@@ -20,9 +25,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private cartService: CartService
+    private cartService: CartService,
+    private router: Router
   ) {}
 
+  
   ngOnInit(): void {
     // subscribe to role changes so header updates reactively after login/logout
     this.roleSub = this.authService.role$.subscribe(storedRole => {
@@ -50,6 +57,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
   logout(): void {
     this.authService.logout();
   }
+
+  
+  onSearch(event?: Event) {
+  event?.preventDefault();
+
+  console.log('Search clicked:', this.searchQuery); // 👈 ADD THIS
+
+  if (!this.searchQuery.trim()) return;
+
+  this.router.navigate(['/products'], {
+    queryParams: { search: this.searchQuery }
+  });
+}
 
 
   

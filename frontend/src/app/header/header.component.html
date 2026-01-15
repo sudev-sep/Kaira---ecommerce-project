@@ -140,7 +140,7 @@
 
 <div class="search-popup">
   <div class="search-popup-container">
-    <form role="search" method="get" class="form-group" action="">
+<form class="form-group" (submit)="onSearch($event)">
       <input type="search" id="search-form" class="form-control border-0 border-bottom"
         placeholder="Type and press enter" value="" name="s" />
       <button type="submit" class="search-submit border-0 position-absolute bg-white"
@@ -245,6 +245,8 @@
               <li class="nav-item"><a class="nav-link" routerLink="/"  >Home</a></li>
               <li class="nav-item"><a class="nav-link" [routerLink]="['/admin_h']" [queryParams]="{ section: 'customer-data' }"> Customer Data </a> </li>
               <li class="nav-item"><a class="nav-link" [routerLink]="['/admin_h']" [queryParams]="{ section: 'seller-data' }"> seller Data </a> </li>  
+              <li class="nav-item"><a class="nav-link" [routerLink]="['/admin_h']" [queryParams]="{ section: 'product-data' }"> product Data </a> </li>
+
               <li class="nav-item"><a class="nav-link" (click)="logout()">Logout</a></li>
             </ul>
 
@@ -275,7 +277,10 @@
           
          <li class="d-none d-lg-block" *ngIf="isLoggedIn">
   <a routerLink="/cart" class="text-uppercase mx-3 cart-wrapper">
-    <span class="cart-icon">🛒</span>
+<span class="cart-icon">
+  <img src="assets/images/onT.png" alt="Cart" width="24" height="24">
+</span>
+
     <span
       class="cart-badge"
       *ngIf="(cartCount$ | async) as count"
@@ -300,12 +305,25 @@
             </a>
           </li>
           <li class="search-box mx-2">
-            <a href="#search" class="search-button">
-              <svg width="24" height="24" viewBox="0 0 24 24">
-                <use xlink:href="#search"></use>
-              </svg>
-            </a>
-          </li>
+  <div class="form-group d-flex">
+  <input
+    type="search"
+    class="form-control border-0 border-bottom"
+    placeholder="Search products..."
+    [(ngModel)]="searchQuery"
+    name="search"
+    (keydown.enter)="onSearch($event)"
+  />
+
+  <i
+    class="bi bi-search ms-2"
+    style="cursor:pointer"
+    (click)="onSearch()"
+  ></i>
+</div>
+
+</li>
+
         </ul>
       </div>
     </div>

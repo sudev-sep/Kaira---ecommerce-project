@@ -11,7 +11,7 @@ import { ProductEditComponent } from './product-edit/product-edit.component';
 import { IndexComponent } from './index/index.component';
 import { CartComponent } from './cart/cart.component';
 import { AboutComponent } from './about/about.component';
-
+import { ProductPageComponent } from './product-page/product-page.component';
 
 
 const routes: Routes = [
@@ -26,7 +26,8 @@ const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: IndexComponent },
     { path: 'cart', component:CartComponent},
-    { path: 'about', component:AboutComponent}
+    { path: 'about', component:AboutComponent},
+    { path: 'products', component:ProductPageComponent}
     
 
 

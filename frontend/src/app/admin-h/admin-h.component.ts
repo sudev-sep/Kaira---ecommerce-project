@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-admin-h',
   templateUrl: './admin-h.component.html',
@@ -12,6 +13,8 @@ export class AdminHComponent {
   section: string = 'seller-data';
 customers: any[] = [];
 sellers: any[] = [];
+products: any[] = [];
+
 
 constructor(private http: HttpClient, private authService: AuthService,
   private route: ActivatedRoute,
@@ -27,6 +30,9 @@ ngOnInit(): void {
   })
   this.fetchcustomers();
   this.fetchsellers();
+  this.loadProducts(); 
+
+
   this.isLoggedIn = !!localStorage.getItem('token');
   this.role = localStorage.getItem('role');
 }
@@ -50,6 +56,7 @@ deletecustomers(id: number) {
       error: (err: any) => console.error('Failed to delete customer', err)
     });
 }
+
 
 
 
@@ -98,7 +105,64 @@ addsellerView() {
 }
 
 
+ loadProducts() {
+  const token = localStorage.getItem('token');
 
+  const headers = {
+    Authorization: `Token ${token}`
+  };
+
+  this.http.get<any[]>(
+    'http://127.0.0.1:8000/api/admin/products/',
+    { headers }
+  ).subscribe({
+    next: data => {
+      this.products = data;
+      console.log('Admin products loaded', data);
+    },
+    error: err => console.error('Products load failed', err)
+  });
 }
 
 
+
+  productApprove(id: number) {
+  const headers = {
+    Authorization: `Token ${localStorage.getItem('token')}`
+  };
+
+  this.http.post(
+    `http://127.0.0.1:8000/api/admin/approve-product/${id}/`,
+    {},
+    { headers }
+  ).subscribe({
+    next: () => {
+      alert('Product approved successfully!');
+      this.loadProducts();
+    },
+    error: err => {
+      console.error('Approve failed', err);
+    }
+  });
+}
+
+deleteProduct(id: number) {
+  const headers = {
+    Authorization: `Token ${localStorage.getItem('token')}`
+  };
+
+  this.http.delete(
+    `http://127.0.0.1:8000/api/admin/delete-product/${id}/`,
+    { headers }
+  ).subscribe({
+    next: () => {
+      alert('Product deleted successfully!');
+      this.loadProducts();
+    },
+    error: err => {
+      console.error('Delete failed', err);
+    }
+  });
+}
+
+}

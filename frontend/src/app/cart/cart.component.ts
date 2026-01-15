@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../services/cart.service';
-import { HttpClient } from '@angular/common/http';  
+import { HttpClient } from '@angular/common/http'; 
+import { NgZone } from '@angular/core';
+
 
 @Component({
   selector: 'app-cart',
@@ -11,7 +13,7 @@ export class CartComponent implements OnInit {
 
   cartItems: any[] = [];
 
-  constructor(private cartService: CartService, private http: HttpClient) {}
+  constructor(private cartService: CartService,   private zone: NgZone ,private http: HttpClient) {}
 
   ngOnInit(): void {
     this.loadCart();
@@ -49,23 +51,26 @@ export class CartComponent implements OnInit {
   }
   
 
- 
 purchase() {
   const options: any = {
-    key: 'rzp_test_ifqXZb84qSL1CP', 
+    key: 'rzp_test_ifqXZb84qSL1CP',
     amount: this.getTotalPrice() * 100,
     currency: 'INR',
     name: 'Demo Shop',
     description: 'Demo Purchase',
 
     handler: (response: any) => {
-      // TRUST demo payment
-      this.http.post('http://localhost:8000/api/checkout/', {
-        payment_id: response.razorpay_payment_id,
-        status: 'success'
-      }).subscribe(() => {
-        alert('Demo Payment Successful');
-        this.cartItems = [];
+      this.zone.run(() => {
+        this.http.post('http://localhost:8000/api/checkout/', {
+          payment_id: response.razorpay_payment_id,
+          status: 'success'
+        }).subscribe(() => {
+
+          alert('Demo Payment Successful');
+          this.cartItems = [];
+
+          this.loadCart();
+        });
       });
     }
   };

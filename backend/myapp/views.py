@@ -1,29 +1,25 @@
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
+# Django
 from django.contrib.auth import authenticate
 from django.db import transaction
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
 from django.views import View
-from django.shortcuts import render
-from .serializers import CustomerSerializer
-from .models import Customer
-from .serializers import SellerSerializer
-from .models import Seller,User,Cart,CartItem
-from rest_framework import status
-from rest_framework import viewsets, permissions
-from .models import Product, Order, OrderItem
-from .serializers import ProductSerializer, OrderSerializer, SellerUpdateSerializer
-from .permissions import IsSeller
-from rest_framework.decorators import action
 from django.views.generic import TemplateView
-try:
-    import razorpay
-except Exception:
-    razorpay = None
+from rest_framework import status, viewsets, permissions
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.filters import SearchFilter
+from rest_framework.generics import ListAPIView, ListCreateAPIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import User, Customer, Seller, Product, Cart, CartItem, Order, OrderItem
+from .serializers import CustomerSerializer, SellerSerializer, SellerUpdateSerializer, ProductSerializer, OrderSerializer
+from .permissions import IsSeller
 from django.conf import settings
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -58,7 +54,6 @@ class LoginView(APIView):
 
         token, _ = Token.objects.get_or_create(user=user)
 
-        # Base response for all users
         response_data = {
             "token": token.key,
             "username": user.username,
@@ -67,7 +62,6 @@ class LoginView(APIView):
             "is_superuser": user.is_superuser,
         }
 
-        # Add extra details depending on user type
         if user.is_superuser:
             response_data["role"] = "admin"
             response_data["message"] = "Admin login successful"
@@ -228,6 +222,25 @@ class ProductViewSet(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
+    
+    def get_queryset(self):
+        queryset = Product.objects.filter(is_active=True)
+
+        search = self.request.query_params.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(name__icontains=search)
+            )
+
+        return queryset
+    
+    def perform_create(self, serializer):
+      user = self.request.user
+
+      if not hasattr(user, 'seller'):
+        raise PermissionDenied("Only sellers can add products")
+
+      serializer.save(seller=user.seller)
 
 
 
@@ -248,9 +261,11 @@ class OrderViewSet(viewsets.ModelViewSet):
         return Response(self.get_serializer(order).data, status=status.HTTP_201_CREATED)
     
 
+
 class ProductEditView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  
 
     def get(self, request, id):
         try:
@@ -258,7 +273,10 @@ class ProductEditView(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Product not found"}, status=404)
 
-        serializer = ProductSerializer(product)
+        serializer = ProductSerializer(
+            product,
+            context={'request': request}  
+        )
         return Response(serializer.data)
 
     def put(self, request, id):
@@ -267,12 +285,19 @@ class ProductEditView(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Product not found"}, status=404)
 
-        serializer = ProductSerializer(product, many=True, context={'request': request})
+        serializer = ProductSerializer(
+            product,
+            data=request.data,              
+            partial=True,                   
+            context={'request': request}
+        )
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
 
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 class ProductDeleteView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -382,8 +407,6 @@ class CheckoutView(APIView):
 
         order.total_amount = total
         order.save()
-
-        # ✅ clear cart
         cart.items.all().delete()
 
         return Response(
@@ -407,7 +430,6 @@ class AddToCartView(APIView):
         except Product.DoesNotExist:
             return Response({"error": "Product not found"}, status=404)
 
-        # ✅ cart belongs to USER, not customer
         cart, _ = Cart.objects.get_or_create(user=request.user)
 
         cart_item, created = CartItem.objects.get_or_create(
@@ -423,7 +445,6 @@ class AddToCartView(APIView):
             {"message": "Item added to cart"},
             status=status.HTTP_200_OK
         )
-
 
 
 class RemoveFromCartView(APIView):
@@ -445,3 +466,54 @@ class RemoveFromCartView(APIView):
                 {"error": "Cart item not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
+
+
+class AdminProductListView(ListAPIView):
+    serializer_class = ProductSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+
+    def post(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        product.is_active = True
+        product.save()
+
+        return Response(
+            {"message": "Product approved successfully"},
+            status=200
+        )
+
+    def get_queryset(self):
+        return Product.objects.all()
+    
+   
+class AdminDeleteProductView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+    def delete(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        product.delete()
+
+        return Response(
+            {"message": "Product deleted successfully"},
+            status=200
+        )
+
+class AddProductView(APIView):
+    permission_classes = [IsAuthenticated, IsSeller]
+
+    def post(self, request):
+        seller = request.user.seller_profile   
+
+        serializer = ProductSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+
+        if serializer.is_valid():
+            serializer.save(seller=seller)
+            return Response(serializer.data, status=201)
+
+        return Response(serializer.errors, status=400)

@@ -115,6 +115,62 @@
 
   </section>
 
+
+  
+  <!-- ================= product MANAGEMENT ================= -->
+  <section *ngIf="section === 'product-data'" class="mb-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Products</h2>
+    </div>
+
+    <div class="table-responsive" *ngIf="products.length > 0">
+      <table class="table table-striped table-dark text-center align-middle">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let product of products">
+            <td>
+              <img [src]="product.image ? product.image : '/assets/placeholder.png'" width="50">
+            </td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.short_description }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.stock > 0 ? product.stock : 'Out of stock' }}</td>
+            <td>
+
+              <button
+                class="btn btn-danger btn-sm"
+                (click)="deleteProduct(product.id)">
+                Delete
+              </button>
+
+              <button
+                class="btn btn-primary btn-sm ms-2"
+                (click)=" productApprove(product.id)">
+                Approve
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p *ngIf="products.length === 0" class="text-center mt-4">
+      No products found. Click "Add Product" to create one.
+    </p>
+
+
+  </section>
 </div>
 
 <app-footer></app-footer>

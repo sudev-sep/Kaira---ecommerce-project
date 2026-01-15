@@ -65,7 +65,7 @@
           <input class="form-control" [(ngModel)]="seller.gst_number" name="gst_number">
         </div>
 
-        <button class="btn btn-success w-100">Update Profile</button>
+        <button class="btn btn-primary w-100">Update Profile</button>
       </div>
 
     </form>
@@ -103,7 +103,7 @@
             <td>{{ product.name }}</td>
             <td>{{ product.short_description }}</td>
             <td>{{ product.price }}</td>
-            <td>{{ product.stock }}</td>
+            <td>{{ product.stock > 0 ? product.stock : 'Out of stock' }}</td>
             <td>
               <button
                 class="btn btn-primary btn-sm me-2"

@@ -1,0 +1,58 @@
+<!-- Header (search handled via query params) -->
+<app-header></app-header>
+
+<div class="container my-4">
+
+  <!-- Search result info -->
+  <div class="mb-3" *ngIf="searchTerm">
+    <h5 class="text-muted">
+      Showing results for: <strong>"{{ searchTerm }}"</strong>
+    </h5>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="row" *ngIf="products.length > 0; else noProducts">
+
+    <div
+      class="col-lg-3 col-md-4 col-sm-6 mb-4"
+      *ngFor="let product of products"
+    >
+      <div class="card h-100 product-card">
+
+        <!-- Product Image -->
+        <img
+          [src]="product.image"
+          class="card-img-top"
+          alt="{{ product.name }}"
+        />
+
+        <!-- Product Body -->
+        <div class="card-body text-center">
+          <h6 class="card-title">{{ product.name }}</h6>
+          <p class="text-muted mb-1">{{ product.category }}</p>
+          <h5 class="fw-bold">₹{{ product.price }}</h5>
+        </div>
+
+        <!-- Product Actions -->
+        <div class="card-footer bg-white border-0 text-center">
+          <button class="btn btn-sm btn-dark w-100">
+            View Product
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- No products template -->
+  <ng-template #noProducts>
+    <div class="text-center py-5">
+      <h4>No products found</h4>
+      <p class="text-muted">
+        Try searching with a different keyword.
+      </p>
+    </div>
+  </ng-template>
+
+</div>

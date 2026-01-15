@@ -43,8 +43,13 @@ urlpatterns = [
     path('api/cart/add/', views.AddToCartView.as_view(), name='add_cart'),
     path('api/cart/', views.CheckoutView.as_view(), name='cart'),
     path('api/checkout/', views .CheckoutView.as_view()),
-    path('api/cart/remove/<int:item_id>/', views.RemoveFromCartView.as_view()),
- ]
+    path('api/cart/remove/<int:item_id>/', views.RemoveFromCartView.as_view(),name='removecart'),
+    path('api/admin/products/',views.AdminProductListView.as_view(),name='admin_products'),
+    path('api/admin/approve-product/<int:pk>/',views.AdminProductListView.as_view(),name='admin_products'),
+    path('api/admin/delete-product/<int:pk>/',views.AdminDeleteProductView.as_view(),name='admin_products'),
+    path('api/products/add/',views. AddProductView.as_view(), name='add-product'),
+
+ ]  
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
