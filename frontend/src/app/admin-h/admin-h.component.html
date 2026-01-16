@@ -134,6 +134,7 @@
             <th>Price</th>
             <th>Stock</th>
             <th>Actions</th>
+
           </tr>
         </thead>
 
@@ -148,17 +149,27 @@
             <td>{{ product.stock > 0 ? product.stock : 'Out of stock' }}</td>
             <td>
 
-              <button
-                class="btn btn-danger btn-sm"
-                (click)="deleteProduct(product.id)">
-                Delete
-              </button>
+  <span
+    *ngIf="product.is_active"
+    class="badge bg-success me-2">
+    Approved
+  </span>
 
-              <button
-                class="btn btn-primary btn-sm ms-2"
-                (click)=" productApprove(product.id)">
-                Approve
-              </button>
+  <button
+    *ngIf="!product.is_active"
+    class="btn btn-primary btn-sm me-2"
+    (click)="productApprove(product.id)">
+    Approve
+  </button>
+
+  <button
+    class="btn btn-danger btn-sm"
+    (click)="deleteProduct(product.id)">
+    Delete
+  </button>
+
+
+
             </td>
           </tr>
         </tbody>
