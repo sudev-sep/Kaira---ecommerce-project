@@ -48,6 +48,7 @@ urlpatterns = [
     path('api/admin/approve-product/<int:pk>/',views.AdminProductListView.as_view(),name='admin_products'),
     path('api/admin/delete-product/<int:pk>/',views.AdminDeleteProductView.as_view(),name='admin_products'),
     path('api/products/add/',views. AddProductView.as_view(), name='add-product'),
+    path('api/orders/customer/', views.CustomerOrderHistoryView.as_view(),name='customer_orders'),
 
  ]  
 

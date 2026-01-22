@@ -1,0 +1,49 @@
+
+
+/* Table */
+.soft-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+/* Header */
+.soft-table thead th {
+  background: transparent;
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  border: none;
+  padding: 10px 14px;
+}
+
+/* Rows become cards */
+.soft-table tbody tr {
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  border-radius: 14px;
+  transition: all 0.2s ease;
+}
+
+.soft-table tbody tr:hover {
+  transform: translateY(-2px);
+}
+
+/* Cells */
+.soft-table td {
+  border: none;
+  padding: 14px;
+  vertical-align: middle;
+}
+
+/* Rounded edges */
+.soft-table tbody tr td:first-child {
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+}
+
+.soft-table tbody tr td:last-child {
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+}

@@ -4,17 +4,15 @@
 
   <h2 class="mb-4 text-center">Your Cart</h2>
 
-  <!-- If cart is empty -->
   <div *ngIf="cartItems.length === 0" class="alert alert-info text-center">
     Your cart is empty 🛒
   </div>
 
-  <!-- Cart Table -->
   <div *ngIf="cartItems.length > 0">
-    <table class="table table-bordered align-middle">
+    <table class="table table-bordered soft-table align-middle">
       <thead class="table-dark">
         <tr>
-          <th>#</th>
+          <th>No</th>
           <th>Product</th>
           <th>Price (₹)</th>
           <th>Quantity</th>
@@ -35,7 +33,6 @@
       </tbody>
     </table>
 
-    <!-- Cart Summary -->
     <div class="row mt-4">
       <div class="col-md-6 offset-md-6">
         <div class="card">
@@ -53,7 +50,7 @@
             </p>
 
             <button
-              class="btn btn-success w-100 mt-3"
+              class="btn btn-success rounded w-100 mt-3"
               (click)="purchase()"
             >
               Purchase

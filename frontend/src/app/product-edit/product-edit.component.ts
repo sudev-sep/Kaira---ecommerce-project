@@ -27,12 +27,10 @@ export class ProductEditComponent implements OnInit {
     });
   }
 
-  // ---------- FILE SELECTION ----------
   onFileSelected(event: any) {
     this.selectedImage = event.target.files[0];
   }
 
-  // ---------- UPDATE PRODUCT ----------
   updateProduct() {
     const formData = new FormData();
 

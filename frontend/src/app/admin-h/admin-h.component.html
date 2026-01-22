@@ -8,12 +8,12 @@
     <h2 class="text-center mb-4">Customer Management</h2>
 
     <!-- Debug Info -->
-    <p class="text-center text-danger fw-semibold">
+    <!-- <p class="text-center text-danger fw-semibold">
       isLoggedIn: {{ isLoggedIn }} | role: {{ role }}
-    </p>
+    </p> -->
 
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped table-dark text-center align-middle">
+    <div class="table-responsive soft-table-wrapper">
+      <table class="soft-table">
         <thead>
           <tr>
             <th>Firstname</th>
@@ -38,7 +38,7 @@
             <td>{{ customer.customer_id }}</td>
             <td>
               <button
-                class="btn btn-danger btn-sm"
+                class="btn btn-danger button-custom btn-sm"
                 (click)="deletecustomers(customer.id)">
                 Delete
               </button>
@@ -48,6 +48,11 @@
       </table>
     </div>
 
+    
+
+
+
+
   </section>
 
 
@@ -55,15 +60,15 @@
   <section *ngIf="section === 'seller-data'" class="mb-5">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0">Seller Management</h2>
-
-      <button class="btn btn-primary" (click)="addsellerView()">
+      <h2 class="mb-0 text-center">Seller Management</h2>
+ 
+      <button class="btn rounded btn-primary" (click)="addsellerView()">
         Add Seller
       </button>
     </div>
 
-    <div class="table-responsive">
-      <table class="table  table-striped table-dark text-center align-middle">
+    <div class="table-responsive soft-table-wrapper">
+      <table class=" soft-table">
         <thead>
           <tr>
             <th>Firstname</th>
@@ -95,18 +100,22 @@
             </td>
 
             <td>
+              <tr>
               <button
-                class="btn btn-primary btn-sm me-2"
+                class="btn btn-primary button-custom  btn-sm me-2"
                 (click)="approvesellers(seller.id)"
                 [disabled]="seller.is_approved">
                 Approve
               </button>
-
+              </tr>
+              
+              <tr>
               <button
-                class="btn btn-danger btn-sm"
+                class="btn btn-danger button-custom  btn-sm"
                 (click)="deletesellers(seller.id)">
                 Delete
               </button>
+              </tr>
             </td>
           </tr>
         </tbody>
@@ -121,11 +130,11 @@
   <section *ngIf="section === 'product-data'" class="mb-5">
 
   <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0">Products</h2>
+      <h2 class="mb-0 text-center">Products</h2>
     </div>
 
-    <div class="table-responsive" *ngIf="products.length > 0">
-      <table class="table table-striped table-dark text-center align-middle">
+    <div class="table-responsive soft-table-wrapper" *ngIf="products.length > 0">
+      <table class="soft-table">
         <thead>
           <tr>
             <th>Image</th>
@@ -148,7 +157,7 @@
             <td>{{ product.price }}</td>
             <td>{{ product.stock > 0 ? product.stock : 'Out of stock' }}</td>
             <td>
-
+  <tr>
   <span
     *ngIf="product.is_active"
     class="badge bg-success me-2">
@@ -157,17 +166,22 @@
 
   <button
     *ngIf="!product.is_active"
-    class="btn btn-primary btn-sm me-2"
+    class="btn btn-primary button-custom btn-sm me-2"
     (click)="productApprove(product.id)">
     Approve
   </button>
 
+  </tr>
+
+
+  <tr>
+
   <button
-    class="btn btn-danger btn-sm"
+    class="btn btn-danger button-custom btn-sm"
     (click)="deleteProduct(product.id)">
     Delete
   </button>
-
+  </tr>
 
 
             </td>

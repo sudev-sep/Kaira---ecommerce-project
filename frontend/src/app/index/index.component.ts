@@ -4,14 +4,10 @@ import {
   AfterViewInit,
   OnDestroy
 } from '@angular/core';
-
 import { AuthService } from '../services/auth.service';
-
 import { ProductService } from '../services/product.service';
 import { CartService } from '../services/cart.service';
 import { Router } from '@angular/router';
-
-/* Swiper */
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
 
@@ -27,7 +23,6 @@ declare const AOS: any;
 export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
 
   products: any[] = [];
-  newsletterEmail = '';
 
   private swipers: Swiper[] = [];
 
@@ -38,7 +33,6 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router
   ) {}
 
-    //  LIFECYCLE
 
   ngOnInit(): void {
     this.loadProducts();
@@ -56,7 +50,6 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroySwipers();
   }
 
-    //  DATA
 
   private loadProducts(): void {
     this.productService.getProducts().subscribe({
@@ -95,7 +88,6 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   
-    //  SWIPER (FIXED)
  
 
   private safeInitSwipers(): void {
@@ -105,7 +97,6 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
   private initSwipers(): void {
     this.destroySwipers();
 
-    /* MAIN HERO SWIPER */
     const main = document.querySelector('.main-swiper') as HTMLElement;
     if (main) {
       this.swipers.push(
@@ -126,7 +117,6 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
 
-    /* PRODUCT SWIPERS (MULTIPLE FIX) */
     document.querySelectorAll('.product-carousel').forEach(section => {
 
       const swiperEl = section.querySelector('.product-swiper') as HTMLElement;
@@ -162,14 +152,8 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   
-    //  ACTIONS
- 
+   
 
-  subscribe(): void {
-    if (!this.newsletterEmail) return;
-    alert(`Subscribed: ${this.newsletterEmail}`);
-    this.newsletterEmail = '';
-  }
 
   addToCart(productId: number): void {
 

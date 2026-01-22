@@ -68,8 +68,9 @@ purchase() {
 
           alert('Demo Payment Successful');
           this.cartItems = [];
-
+          this.cartService.updateCartCount(0);
           this.loadCart();
+
         });
       });
     }

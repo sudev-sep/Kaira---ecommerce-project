@@ -11,6 +11,9 @@ export class CustomerHComponent implements OnInit {
   section2 = 'cus-profile';
   editing = false;
   customer: any = null;
+  orders: any[] = [];
+  
+
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
@@ -19,6 +22,7 @@ export class CustomerHComponent implements OnInit {
       this.section2=params['section2']||'cus-profile'||'edit';
     })
     this.getProfile();
+    this.getOrderHistory();
   }
 
   getProfile() {
@@ -36,7 +40,6 @@ export class CustomerHComponent implements OnInit {
       next: () => {
         alert('Profile updated successfully!');
         this.editing = false;
-        // this.section2='viewprofile'
         this.getProfile();
       },
       error: err => {
@@ -45,4 +48,25 @@ export class CustomerHComponent implements OnInit {
       }
     });
   }
-}
+
+   showOrders() {
+    this.section2 = 'orders';
+    this.getOrderHistory();
+  }
+
+  
+      getOrderHistory() {
+        const token = localStorage.getItem('token'); 
+        this.http.get<any[]>('http://localhost:8000/api/orders/customer/', {
+          headers: { Authorization: `Token ${token}` }
+        })
+        .subscribe({
+          next: (res) => {
+            this.orders = res;
+          },
+          error: (err) => {
+            console.error('Failed to load orders', err);
+          }
+        });
+      }
+    }

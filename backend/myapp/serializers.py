@@ -163,19 +163,32 @@ class CartSerializer(serializers.ModelSerializer):
 # ---------------- ORDER ---------------- #
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source='product.name', read_only=True)
+    seller_name = serializers.CharField(source='product.seller.shop_name', read_only=True)
+
     class Meta:
         model = OrderItem
-        fields = ['product', 'quantity', 'unit_price']
+        fields = [
+            'id',
+            'product_name',
+            'seller_name',
+            'quantity',
+            'unit_price'
+        ]
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True)
+    items = OrderItemSerializer(many=True, read_only=True)
+    customer_name = serializers.CharField(source='user.username', read_only=True)
 
     class Meta:
         model = Order
         fields = [
-            'id', 'customer', 'items',
-            'total_amount', 'status',
-            'shipping_address', 'created_at'
+            'id',
+            'customer_name',
+            'total_amount',
+            'status',
+            'created_at',
+            'shipping_address',
+            'items'
         ]
-        read_only_fields = ['id', 'total_amount', 'status', 'created_at']

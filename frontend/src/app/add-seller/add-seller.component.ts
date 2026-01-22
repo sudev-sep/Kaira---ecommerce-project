@@ -39,7 +39,7 @@ export class AddSellerComponent {
 
     this.authservice.createSeller(sellerData).subscribe(
       (res: any) => {
-        console.log("✅ Seller Created Successfully", res);
+        console.log(" Seller Created Successfully", res);
 
         console.log('Create seller', this.seller);
         alert('Seller creation not yet implemented.');

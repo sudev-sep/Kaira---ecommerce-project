@@ -517,3 +517,18 @@ class AddProductView(APIView):
             return Response(serializer.data, status=201)
 
         return Response(serializer.errors, status=400)
+
+class CustomerOrderHistoryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        logger.info(f"CustomerOrderHistoryView called for user: {request.user}")
+        try:
+            orders = Order.objects.filter(user=request.user).order_by('-created_at')
+            if not orders.exists():
+                return Response({"message": "No orders found for this user."}, status=200)
+            serializer = OrderSerializer(orders, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            logger.error(f"Error in CustomerOrderHistoryView: {e}")
+            return Response({"error": "Could not fetch order history."}, status=500)

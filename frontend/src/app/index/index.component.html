@@ -19,7 +19,7 @@
             <div class="product-item card h-100 border-0 zoom-hover">
               <div class="image-holder position-relative">
 
-                <a [routerLink]="['/product', p.id]">
+                <a [routerLink]="['/item', p.id]">
                   <img [src]="p.image" [alt]="p.name" class="img-fluid w-100">
                 </a>
 
@@ -53,7 +53,6 @@
   </div>
 </section>
 
-<!-- 🛒 PRODUCT GRID -->
 <section class="product-section py-5 bg-light">
   <div class="container">
 
@@ -67,7 +66,7 @@
         <div class="product-card">
 
           <div class="image-wrapper">
-            <a [routerLink]="['/product', p.id]">
+            <a [routerLink]="['/item', p.id]">
               <img [src]="p.image" />
             </a>
 

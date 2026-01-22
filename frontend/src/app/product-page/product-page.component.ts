@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { CartService } from '../services/cart.service';
+
 
 @Component({
    selector: 'app-product-page',
@@ -14,7 +17,10 @@ export class ProductPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private router: Router,
+    private productService: ProductService,
+    private authService: AuthService,
+    private cartService: CartService
   ) {}
 
  ngOnInit() {
@@ -27,6 +33,25 @@ export class ProductPageComponent implements OnInit {
         this.products = res;
       });
   });
-}
+ }
 
+  addToCart(productId: number): void {
+
+    if (!this.authService.isLoggedIn()) {
+      const confirmLogin = confirm('Please login to add items to cart');
+
+      if (confirmLogin) {
+        this.router.navigate(['/login'], {
+          queryParams: { returnUrl: '/' }
+        });
+      }
+      return;
+    }
+    this.cartService.addToCart(productId).subscribe({
+      next: () => alert('Added to cart'),
+      error: err => {
+        alert(err.status === 401 ? 'Please login first' : 'Failed to add to cart');
+      }
+    });
+  }
 }

@@ -12,6 +12,7 @@ import { IndexComponent } from './index/index.component';
 import { CartComponent } from './cart/cart.component';
 import { AboutComponent } from './about/about.component';
 import { ProductPageComponent } from './product-page/product-page.component';
+import { ItemPageComponent } from './item-page/item-page.component';  
 
 
 const routes: Routes = [
@@ -27,7 +28,8 @@ const routes: Routes = [
     { path: 'home', component: IndexComponent },
     { path: 'cart', component:CartComponent},
     { path: 'about', component:AboutComponent},
-    { path: 'products', component:ProductPageComponent}
+    { path: 'products', component:ProductPageComponent},
+    { path: 'item/:id', component:ItemPageComponent}
     
 
 

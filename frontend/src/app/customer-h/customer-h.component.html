@@ -2,26 +2,45 @@
 <app-header></app-header>
 
 <!-- ================= CUSTOMER PROFILE ================= -->
-<section
-  *ngIf="section2 === 'cus-profile'"
-  class="container my-5"
->
-  <div class="row justify-content-center">
-    <div class="col-md-6">
 
-      <h2 class="mb-4 text-center">
-        Welcome, {{ customer.first_name }} {{ customer.last_name }}
-      </h2>
 
-      <div class="p-4 border rounded shadow-sm bg-light">
-        <p><strong>Username:</strong> {{ customer.username }}</p>
-        <p><strong>Email:</strong> {{ customer.email }}</p>
-        <p><strong>Phone:</strong> {{ customer.phone_number }}</p>
-        <p><strong>Address:</strong> {{ customer.address }}</p>
-      </div>
+  <section *ngIf="section2 === 'cus-profile'" class="seller-profile container my-5">
 
+  <div class="profile-header">
+    <div class="avatar">
+      {{ customer?.first_name?.charAt(0) }}
+    </div>
+
+    <div class="profile-info">
+      <h3>{{ customer.first_name }} {{ customer.last_name }}</h3>
+      <p>Customer Account</p>
     </div>
   </div>
+
+  <div class="profile-details">
+
+    <div class="detail-item">
+      <span>Username</span>
+      <p>{{ customer.username }}</p>
+    </div>
+
+    <div class="detail-item">
+      <span>Email</span>
+      <p>{{ customer.email }}</p>
+    </div>
+
+    <div class="detail-item">
+      <span>Phone</span>
+      <p>{{ customer.phone_number }}</p>
+    </div>
+
+    <div class="detail-item">
+      <span>Address</span>
+      <p>{{ customer.address }}</p>
+    </div>
+
+  </div>
+
 </section>
 
 <!-- ================= EDIT PROFILE ================= -->
@@ -35,7 +54,7 @@
       <form
         (ngSubmit)="updateProfile()"
         #editForm="ngForm"
-        class="p-4 border rounded shadow-sm bg-light"
+        class="p-4 border  edit-profile rounded shadow-sm bg-light"
       >
         <h3 class="mb-4 text-center text-dark">
           Edit Profile
@@ -101,7 +120,7 @@
           />
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">
+        <button type="submit" class="btn btn-primary w-100 rounded">
           Update Profile
         </button>
 
@@ -110,6 +129,55 @@
     </div>
   </div>
 </section>
+
+<!-- ---------------------------------------------------------------------- -->
+
+
+<!-- ================= CUSTOMER ORDER HISTORY ================= -->
+
+<section *ngIf="section2 === 'orders'" class="container my-5">
+
+  <h3 class="mb-4 text-center">My Orders</h3>
+
+  <div *ngIf="orders.length === 0" class="text-center text-muted">
+    No orders found.
+  </div>
+
+  <div *ngFor="let order of orders" class="card mb-4 shadow-sm">
+
+    <div class="card-header d-flex justify-content-between">
+      <span>
+        <strong>Order #{{ order.id }}</strong>
+      </span>
+      <!-- <span class="badge bg-info text-dark">
+        {{ order.status | uppercase }}
+      </span> -->
+    </div>
+
+    <div class="card-body">
+      <p><strong>Date:</strong> {{ order.created_at | date:'medium' }}</p>
+      <p><strong>Total:</strong> ₹{{ order.total_amount }}</p>
+      <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+
+      <hr>
+
+      <h6>Items</h6>
+
+      <div *ngFor="let item of order.items" class="mb-2 ps-3">
+        <p class="mb-1">
+          {{ item.product_name }}
+        </p>
+        <small class="text-muted">
+          Qty: {{ item.quantity }} × ₹{{ item.unit_price }}
+        </small>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
 
 <!-- ================= FOOTER ================= -->
 <app-footer></app-footer>

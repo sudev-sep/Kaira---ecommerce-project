@@ -31,18 +31,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   
   ngOnInit(): void {
-    // subscribe to role changes so header updates reactively after login/logout
     this.roleSub = this.authService.role$.subscribe(storedRole => {
       this.role = (storedRole as UserRole) || null;
       this.isLoggedIn = this.authService.isLoggedIn();
     });
 
-    // cart count observable for async pipe in template
     this.cartCount$ = this.cartService.cartCount$;
 
-    // initialize cart count from backend once
     this.cartService.getCart().subscribe(cart => {
-      const items = cart.items || cart; // adjust to your API shape
+      const items = cart.items || cart; 
       const count = Array.isArray(items)
         ? items.reduce((sum: number, i: any) => sum + (i.quantity || 0), 0)
         : 0;
@@ -62,7 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onSearch(event?: Event) {
   event?.preventDefault();
 
-  console.log('Search clicked:', this.searchQuery); // 👈 ADD THIS
+  console.log('Search clicked:', this.searchQuery); 
 
   if (!this.searchQuery.trim()) return;
 
