@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import (
     User, Customer, Seller,
     Product, Order, OrderItem,
-    Cart, CartItem
+    Cart, CartItem,Review, 
 )
 
 # ---------------- USER ---------------- #
@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'password', 'email', 'usertype',
-            'address', 'phone_number', 'first_name', 'last_name'
+            'address', 'phone_number', 'first_name', 'last_name','is_verified'
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -31,6 +31,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         source='customer_profile.customer_id',
         read_only=True
     )
+    
 
     class Meta:
         model = User
@@ -38,7 +39,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             'id', 'username', 'customer_id',
             'first_name', 'last_name',
             'email', 'password',
-            'address', 'phone_number'
+            'address', 'phone_number','is_verified'
         ]
 
     def create(self, validated_data):
@@ -49,7 +50,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         user.save()
 
         Customer.objects.create(user=user)
-        Cart.objects.create(user=user)   # ✅ cart auto created
+        Cart.objects.create(user=user)   
 
         return user
 
@@ -107,6 +108,7 @@ class ProductSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context['request']
         validated_data['seller'] = request.user.seller_profile
+        
         return super().create(validated_data)
 
     def to_representation(self, instance):
@@ -191,4 +193,19 @@ class OrderSerializer(serializers.ModelSerializer):
             'created_at',
             'shipping_address',
             'items'
+        ]
+
+# ---------------- review ---------------- #
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = Review
+        fields = [
+            'id',
+            'user_name',
+            'rating',
+            'comment',
+            'created_at'
         ]

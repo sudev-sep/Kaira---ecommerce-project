@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router'; 
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-register-cus',
@@ -19,7 +20,9 @@ export class RegisterCusComponent {
     address: '',
   };
 
-  constructor(private authService: AuthService, private router: Router) {}
+ 
+
+  constructor(private authService: AuthService, private router: Router, private http: HttpClient) {}
 
   onregister(form: NgForm) {
     if (form.invalid) return;
@@ -46,4 +49,7 @@ export class RegisterCusComponent {
       }
     );
   }
+  
+ 
+
 }

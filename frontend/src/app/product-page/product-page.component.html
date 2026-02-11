@@ -31,14 +31,14 @@
           <h5 class="fw-bold">₹{{ product.price }}</h5>
         </div>
 
-        <div class="card-footer bg-white border-0 text-center">
-          <button
-            class="btn btn-primary w-100"
+        <!-- <div class="card-footer bg-white border-0 text-center">
+          <button *ngif="usertype === 'customer'"
+            class="btn btn-primary w-100 "
             (click)="addToCart(product.id)"
           >
             Add to Cart
           </button>
-        </div>
+        </div> -->
 
       </div>
     </div>
@@ -56,3 +56,5 @@
   </ng-template>
 
 </div>
+
+<app-footer></app-footer>

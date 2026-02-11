@@ -3,26 +3,37 @@
 
 <!-- ================= CUSTOMER PROFILE ================= -->
 
+<section *ngIf="section2 === 'cus-profile'" class="seller-profile">
 
-  <section *ngIf="section2 === 'cus-profile'" class="seller-profile container my-5">
-
+  <!-- HEADER -->
   <div class="profile-header">
-    <div class="avatar">
+    <div class="profile-avatar">
       {{ customer?.first_name?.charAt(0) }}
     </div>
 
     <div class="profile-info">
       <h3>{{ customer.first_name }} {{ customer.last_name }}</h3>
-      <p>Customer Account</p>
+      <p class="username">@{{ customer.username }}</p>
+
+      <div *ngIf="customer?.is_verified" class="verified-badge">
+        Verified Customer
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+          fill="currentColor" viewBox="0 0 16 16">
+          <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011
+          a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0
+          0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01
+          .622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89
+          0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134
+          l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287
+          5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7
+          8.793l2.646-2.647a.5.5 0 0 1 .708.708"/>
+        </svg>
+      </div>
     </div>
   </div>
 
+  <!-- DETAILS -->
   <div class="profile-details">
-
-    <div class="detail-item">
-      <span>Username</span>
-      <p>{{ customer.username }}</p>
-    </div>
 
     <div class="detail-item">
       <span>Email</span>
@@ -39,96 +50,119 @@
       <p>{{ customer.address }}</p>
     </div>
 
+    <div class="detail-item">
+      <span>Account Type</span>
+      <p>Customer</p>
+    </div>
+
   </div>
 
-</section>
+  <!-- VERIFY BUTTON -->
+  <button *ngIf="!customer?.is_verified"
+    class="btn btn-outline-primary verify-btn"
+    (click)="sendOTP()">
+    Verify Account
+  </button>
 
-<!-- ================= EDIT PROFILE ================= -->
-<section
-  *ngIf="section2 === 'edit'"
-  class="container my-5"
->
-  <div class="row justify-content-center">
-    <div class="col-md-6">
+  <!-- OTP BOX -->
+  <div *ngIf="showOtpBox" class="otp-box">
+    <input type="text"
+      [(ngModel)]="otp"
+      maxlength="6"
+      class="form-control"
+      placeholder="Enter OTP">
 
-      <form
-        (ngSubmit)="updateProfile()"
-        #editForm="ngForm"
-        class="p-4 border  edit-profile rounded shadow-sm bg-light"
-      >
-        <h3 class="mb-4 text-center text-dark">
-          Edit Profile
-        </h3>
-
-        <div class="mb-3">
-          <label class="form-label">First Name</label>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="customer.first_name"
-            name="first_name"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Last Name</label>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="customer.last_name"
-            name="last_name"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Username</label>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="customer.username"
-            name="username"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            [(ngModel)]="customer.email"
-            name="email"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Phone</label>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="customer.phone_number"
-            name="phone_number"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Address</label>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="customer.address"
-            name="address"
-          />
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100 rounded">
-          Update Profile
-        </button>
-
-      </form>
-
+    <div class="otp-actions">
+      <button class="btn btn-secondary" (click)="showOtpBox=false">
+        Cancel
+      </button>
+      <button class="btn btn-primary" (click)="verifyOTP()">
+        Verify
+      </button>
     </div>
   </div>
+
 </section>
+>
+
+
+<!-- ================= EDIT PROFILE ================= -->
+<section *ngIf="section2 === 'edit'" class="container my-5">
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0">
+
+          <div class="col-md-4 profile-side text-white text-center p-4">
+            <div class="profile-avatar text-uppercase text-bold text-white bg-secondary rounded-circle d-flex align-items-center justify-content-center mb-3">
+             {{ customer?.first_name?.charAt(0) }}
+            </div>
+            <h5 class="mt-3">
+              {{ customer.first_name }} {{ customer.last_name }}
+            </h5>
+            <p class="small opacity-75">{{ customer.email }}</p>
+          </div>
+
+          <div class="col-md-8 p-4">
+            <h4 class="mb-4">Edit Profile</h4>
+
+            <form (ngSubmit)="updateProfile()" #editForm="ngForm">
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">First Name</label>
+                  <input type="text" class="form-control"
+                         [(ngModel)]="customer.first_name" name="first_name">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Last Name</label>
+                  <input type="text" class="form-control"
+                         [(ngModel)]="customer.last_name" name="last_name">
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control"
+                       [(ngModel)]="customer.username" name="username">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control"
+                       [(ngModel)]="customer.email" name="email">
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Phone</label>
+                  <input type="text" class="form-control"
+                         [(ngModel)]="customer.phone_number" name="phone_number">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Address</label>
+                  <input type="text" class="form-control"
+                         [(ngModel)]="customer.address" name="address">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-dark w-100 rounded-pill">
+                Save Changes
+              </button>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 
 <!-- ---------------------------------------------------------------------- -->
 

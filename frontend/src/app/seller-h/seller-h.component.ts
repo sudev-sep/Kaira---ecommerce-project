@@ -10,9 +10,8 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./seller-h.component.css']
 })
 export class SellerHComponent {
-// section2 = 'viewprofile';
 
-  section1: string = 'profile';
+  section1: string = 'edit-profile';
   editing = false;
   seller: any = null;
   products: any[] = [];

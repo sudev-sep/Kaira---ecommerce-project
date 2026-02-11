@@ -1,0 +1,31 @@
+.edit-profile-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 36px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+.edit-profile-card h3 {
+  font-weight: 700;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-control {
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.btn {
+  padding: 10px 18px;
+}
+
+@media (max-width: 768px) {
+  .edit-profile-card {
+    padding: 24px;
+  }
+}

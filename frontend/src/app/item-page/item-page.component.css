@@ -10,3 +10,14 @@ h2 {
 button {
   padding: 12px 28px;
 }
+
+
+.rating-stars i {
+  font-size: 22px;
+  color: #ffc107;
+  cursor: pointer;
+  margin-right: 4px;
+}
+.rating-stars i.filled {
+  color: #ffc107;
+}

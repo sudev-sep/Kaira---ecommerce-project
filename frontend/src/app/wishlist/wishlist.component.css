@@ -1,0 +1,17 @@
+.wishlist-item {
+  border: 1px solid #e7e7e7;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.wishlist-img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.wishlist-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}

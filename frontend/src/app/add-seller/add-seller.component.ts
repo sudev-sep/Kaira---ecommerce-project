@@ -42,7 +42,7 @@ export class AddSellerComponent {
         console.log(" Seller Created Successfully", res);
 
         console.log('Create seller', this.seller);
-        alert('Seller creation not yet implemented.');
+        alert('Seller created successfully!');
         this.router.navigate(['/admin_h']);
       },
       (err: any) => {

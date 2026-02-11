@@ -22,6 +22,7 @@ import { FooterComponent } from './footer/footer.component';
 import { AboutComponent } from './about/about.component';
 import { ProductPageComponent } from './product-page/product-page.component';
 import { ItemPageComponent } from './item-page/item-page.component';
+import { WishlistComponent } from './wishlist/wishlist.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { ItemPageComponent } from './item-page/item-page.component';
   AboutComponent,
   ProductPageComponent,
   ItemPageComponent,
+  WishlistComponent,
   ],
   imports: [
     BrowserModule,

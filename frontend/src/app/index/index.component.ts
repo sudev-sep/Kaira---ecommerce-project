@@ -7,6 +7,7 @@ import {
 import { AuthService } from '../services/auth.service';
 import { ProductService } from '../services/product.service';
 import { CartService } from '../services/cart.service';
+import { WishlistService } from '../services/wishlist.service';
 import { Router } from '@angular/router';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
@@ -24,18 +25,34 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
 
   products: any[] = [];
 
+  wishlistProductIds: number[] = [];
+
+  userRole: string | null = null;
+  isLoggedIn = false;
+  currentIndex = 0;
+
   private swipers: Swiper[] = [];
 
   constructor(
     private productService: ProductService,
     private cartService: CartService,
+    private wishlistService: WishlistService,
     private authService: AuthService,
     private router: Router
   ) {}
 
 
   ngOnInit(): void {
+
+    setInterval(() => {
+    this.currentIndex = (this.currentIndex + 1) % 3;
+  }, 4000);
     this.loadProducts();
+    this.userRole = localStorage.getItem('role');
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.loadWishlist();
+    
+    
   }
 
   ngAfterViewInit(): void {
@@ -44,10 +61,33 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
         AOS.init({ duration: 1200, once: true });
       }
     }, 100);
+
+    this.isLoggedIn = this.authService.isLoggedIn();
+
+
   }
 
   ngOnDestroy(): void {
     this.destroySwipers();
+  }
+
+  loadWishlist(): void {
+    if (this.authService.isLoggedIn() && this.userRole === 'customer') {
+      this.wishlistService.getWishlist().subscribe({
+        next: (items: any[]) => {
+          this.wishlistProductIds = items.map(item => item.product_id || item.id);
+        },
+        error: () => {
+          this.wishlistProductIds = [];
+        }
+      });
+    } else {
+      this.wishlistProductIds = [];
+    }
+  }
+
+  isInWishlist(productId: number): boolean {
+    return this.wishlistProductIds.includes(productId);
   }
 
 
@@ -174,6 +214,28 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
+toggleWishlist(productId: number) {
+    this.wishlistService.toggleWishlist(productId).subscribe({
+      next: (res: any) => {
+        alert(res.message || 'Wishlist updated');
+        this.loadWishlist();
+        this.wishlistService.getWishlist().subscribe(wishlist => {
+          const count = Array.isArray(wishlist) ? wishlist.length : 0;
+          this.wishlistService.updateWishlistCount(count);
+        });
+      },
+      error: err => {
+        if (err.status === 401) {
+          alert('Please login to use wishlist');
+        } else {
+          alert('Failed to update wishlist');
+        }
+      }
+    });
+  }
 
 
 }
+
+
+

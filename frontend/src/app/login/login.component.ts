@@ -43,16 +43,16 @@ export class LoginComponent {
   if (res.is_superuser || res.usertype === 'admin') {
     this.router.navigate(['/admin_h']);
   } else if (res.usertype === 'customer') {
-    this.router.navigate(['/customer_h']);
+    this.router.navigate(['/home']);
   } else if (res.usertype === 'seller') {
-    this.router.navigate(['/seller_h']);
+    this.router.navigate(['/home']);
   } else {
   this.router.navigate(['/']);
 }
     },
       error: (err: any) => {
         console.error( err,"//////////////////////");
-        alert("Login failed");
+        alert("Login failed. Please check your credentials and try again.");
       }
     });
   }

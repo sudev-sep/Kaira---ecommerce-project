@@ -68,7 +68,7 @@ updateProduct(Id: number, productData: any) {
 }
 
 getRole(): string | null {
-  return localStorage.getItem('usertype');   // 'admin' | 'seller' | 'customer'
+  return localStorage.getItem('usertype');   
 }
 setRole(role: string | null) {
   if (role) {

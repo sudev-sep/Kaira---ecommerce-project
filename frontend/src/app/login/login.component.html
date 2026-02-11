@@ -1,39 +1,68 @@
 <app-header></app-header>
 
-<section class="login-section d-flex align-items-center justify-content-center">
-  <div class="login-card">
 
+
+<div class="auth-page ">
+
+<section class="auth-wrapper">
+
+  <div class="auth-card">
     <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" novalidate>
-      <h2 class="mb-4 text-center">Login</h2>
 
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
+      <h2>Sign in</h2>
+      <p class="subtitle">
+        Welcome back to Kairaa. Please login to your account.
+      </p>
+
+      <div class="form-group">
+        <label for="username">Username</label>
         <input
           type="text"
           id="username"
           name="username"
-          class="form-control"
           required
-          [(ngModel)]="loginData.username">
+          [(ngModel)]="loginData.username"
+          placeholder="Enter your username">
       </div>
 
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
+      <div class="form-group">
+        <label for="password">Password</label>
         <input
           type="password"
           id="password"
           name="password"
-          class="form-control"
           required
-          [(ngModel)]="loginData.password">
+          [(ngModel)]="loginData.password"
+          placeholder="Enter your password">
       </div>
 
-      <button type="submit" class="btn btn-primary w-100 rounded">
+      <button
+        type="submit"
+        class=" btn primary-btn"
+        [disabled]="loginForm.invalid">
         Login
       </button>
+
+      <p class="footer-text">
+        Don’t have an account?
+        <a routerLink="/register">Sign up</a>
+      </p>
+
     </form>
-
   </div>
-</section>
 
+  <div class="auth-brand">
+    <h1>Kairaa</h1>
+    <p>
+      A modern ecommerce platform delivering seamless shopping,
+      secure transactions, and seller driven marketplaces.
+    </p>
+
+    <span class="support">
+      Need help? support@kairaa.com
+    </span>
+  </div>
+
+</section>
+</div>
 <app-footer></app-footer>

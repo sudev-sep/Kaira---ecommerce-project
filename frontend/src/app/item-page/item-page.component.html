@@ -1,43 +1,105 @@
+
 <app-header></app-header>
 
 <div class="container my-5" *ngIf="!loading">
 
-  <div class="row">
+  <div class="row g-4">
     <div class="col-md-5">
-      <img [src]="product.image" class="img-fluid rounded shadow" alt="Product Image"/>
+      <img
+        [src]="product.image"
+        class="img-fluid rounded shadow-sm w-100"
+        alt="Product Image"
+      />
     </div>
 
     <div class="col-md-7">
-      <h2 class="mb-3">{{ product.name }}</h2>
+      <h2 class="fw-bold">{{ product.name }}</h2>
 
-      <h4 class="text-success mb-3">
+      <h4 class="text-success my-3">
         ₹ {{ product.price }}
       </h4>
-      <p>Price includes all taxes.</p>
 
-      <p class="text-muted">
-        {{ product.description }}
-      </p>
+      <p class="text-muted mb-3">{{ product.description }}</p>
 
       <ul class="list-unstyled mb-4">
-        <li><strong>description:</strong> {{ product.short_description }}</li>
+        <li><strong>Description:</strong> {{ product.short_description }}</li>
         <li><strong>Stock:</strong> {{ product.stock }}</li>
       </ul>
 
-      <button
-        class="btn rounded btn-primary btn-lg"
-        (click)="addToCart()"
-      >
-        Add to Cart
-      </button>
+      <div class="d-flex gap-2">
+        <button
+          *ngIf="userRole === 'customer'"
+          class="btn btn-primary btn-lg rounded"
+          (click)="addToCart()">
+          Add to Cart
+        </button>
+
+        <button
+          *ngIf="userRole === 'customer' && isLoggedIn"
+          class="btn rounded"
+          [ngClass]="isInWishlist(product.id) ? 'btn-danger' : 'btn-outline-danger'"
+          (click)="toggleWishlist(product.id)">
+          {{ isInWishlist(product.id) ? 'Remove from Wishlist' : 'Add to Wishlist' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="card mt-5 p-4" *ngIf="isLoggedIn && userRole === 'customer'">
+    <h5 class="mb-3">Write a Review</h5>
+
+    <div class="rating-stars mb-3">
+      <i
+        *ngFor="let star of [1,2,3,4,5]"
+        class="bi fs-4 me-1"
+        [ngClass]="star <= rating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"
+        (click)="rating = star">
+      </i>
+    </div>
+
+    <textarea
+      class="form-control"
+      rows="3"
+      placeholder="Share your experience..."
+      [(ngModel)]="comment">
+    </textarea>
+
+    <button class="btn btn-dark mt-3 rounded" (click)="submitReview()">
+      Submit Review
+    </button>
+  </div>
+
+  <div class="mt-5">
+    <h4 class="mb-3">Customer Reviews</h4>
+
+    <div *ngIf="reviews.length === 0" class="text-muted">
+      No reviews yet. Be the first to review!
+    </div>
+
+    <div class="card mb-3 p-3" *ngFor="let review of reviews">
+      <strong>{{ review.user_name }}</strong>
+
+      <div class="mb-2">
+        <i
+          *ngFor="let star of [1,2,3,4,5]"
+          class="bi me-1"
+          [ngClass]="star <= review.rating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'">
+        </i>
+      </div>
+
+      <p class="mb-0">{{ review.comment }}</p>
     </div>
   </div>
 
 </div>
 
-<app-footer></app-footer>
+
 <div *ngIf="loading" class="text-center my-5">
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
 </div>
+
+<app-footer></app-footer>

@@ -2,6 +2,86 @@
 
 <div class="container my-5">
 
+  <section *ngIf="section === 'dashboard'" class="mb-5">
+
+  <div class="container mt-4">
+
+  <h2 class="mb-4">Admin Dashboard</h2>
+
+  <div class="row g-4">
+
+    <div class="col-md-3">
+      <div class="card shadow text-center">
+        <div class="card-body">
+          <h6>Total Orders</h6>
+          <h3>{{ stats.total_orders }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow text-center">
+        <div class="card-body">
+          <h6>Total sellers</h6>
+          <h3>{{ stats.total_sellers }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow text-center">
+        <div class="card-body">
+          <h6>Total Revenue</h6>
+          <h3>₹ {{ stats.total_amount }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow text-center">
+        <div class="card-body">
+          <h6>Total Users</h6>
+          <h3>{{ stats.total_customers }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow text-center">
+        <div class="card-body">
+          <h6>Total Products</h6>
+          <h3>{{ stats.total_products }}</h3>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<div class="container mt-4">
+
+  <h3 class="mb-3">Sales Analytics</h3>
+
+<div *ngIf="section === 'dashboard'" style="height: 350px;">
+  <canvas #revenueCanvas></canvas>
+</div>
+
+</div>
+
+<div *ngIf="loading" class="text-center mt-4">
+  <div class="spinner-border text-primary"></div>
+</div>
+
+
+</section>
+
+
+
+
+
   <!-- ================= CUSTOMER MANAGEMENT ================= -->
   <section *ngIf="section === 'customer-data'" class="mb-5">
 
@@ -77,7 +157,7 @@
             <th>Email</th>
             <th>Shop Name</th>
             <th>GST Number</th>
-            <th>Status</th>
+            <!-- <th>Status</th> -->
             <th>Actions</th>
           </tr>
         </thead>
@@ -91,23 +171,23 @@
             <td>{{ seller?.shop_name }}</td>
             <td>{{ seller?.gst_number }}</td>
 
-            <td>
+            <!-- <td>
               <span
                 class="badge"
                 [ngClass]="seller.is_approved ? 'bg-success' : 'bg-danger'">
                 {{ seller.is_approved ? 'Approved' : 'Pending' }}
               </span>
-            </td>
+            </td> -->
 
             <td>
-              <tr>
+              <!-- <tr>
               <button
                 class="btn btn-primary button-custom  btn-sm me-2"
                 (click)="approvesellers(seller.id)"
                 [disabled]="seller.is_approved">
                 Approve
               </button>
-              </tr>
+              </tr> -->
               
               <tr>
               <button

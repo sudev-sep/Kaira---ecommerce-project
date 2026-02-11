@@ -1,4 +1,3 @@
-// header.component.ts
 import {  OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { CartService } from '../services/cart.service';
@@ -6,7 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { WishlistService } from '../services/wishlist.service';
 
 
 type UserRole = 'admin' | 'seller' | 'customer' | null;
@@ -20,32 +19,49 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   role: UserRole = null;
   private roleSub?: Subscription;
-
   cartCount$!: Observable<number>;
+  wishlistCount$!: Observable<number>;
 
   constructor(
     private authService: AuthService,
     private cartService: CartService,
+    private wishlistService: WishlistService,
     private router: Router
   ) {}
 
   
   ngOnInit(): void {
-    this.roleSub = this.authService.role$.subscribe(storedRole => {
-      this.role = (storedRole as UserRole) || null;
-      this.isLoggedIn = this.authService.isLoggedIn();
-    });
+  this.roleSub = this.authService.role$.subscribe(storedRole => {
+    this.role = (storedRole as UserRole) || null;
+    this.isLoggedIn = this.authService.isLoggedIn();
 
-    this.cartCount$ = this.cartService.cartCount$;
+    if (this.isLoggedIn && this.role === 'customer') {
+      this.wishlistCount$ = this.wishlistService.wishlistCount$;
 
-    this.cartService.getCart().subscribe(cart => {
-      const items = cart.items || cart; 
-      const count = Array.isArray(items)
-        ? items.reduce((sum: number, i: any) => sum + (i.quantity || 0), 0)
-        : 0;
-      this.cartService.updateCartCount(count);
-    });
-  }
+      this.wishlistService.getWishlist().subscribe({
+        next: (wishlist: any[]) => {
+          const count = Array.isArray(wishlist) ? wishlist.length : 0;
+          this.wishlistService.updateWishlistCount(count);
+        },
+        error: () => {
+          this.wishlistService.updateWishlistCount(0);
+        }
+      });
+    } else {
+      this.wishlistService.updateWishlistCount(0);
+    }
+  });
+
+  this.cartCount$ = this.cartService.cartCount$;
+  this.cartService.getCart().subscribe(cart => {
+    const items = cart.items || cart;
+    const count = Array.isArray(items)
+      ? items.reduce((sum: number, i: any) => sum + (i.quantity || 0), 0)
+      : 0;
+    this.cartService.updateCartCount(count);
+  });
+}
+
 
   ngOnDestroy(): void {
     this.roleSub?.unsubscribe();
@@ -67,8 +83,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     queryParams: { search: this.searchQuery }
   });
 }
-
-
   
 }
 

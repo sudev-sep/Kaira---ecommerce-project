@@ -15,7 +15,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
 from django.conf.urls.static import static
 from myapp import views
 from django.conf import settings
@@ -29,9 +28,8 @@ urlpatterns = [
     path('api/customer/update/', views.CustomerProfileUpdateView.as_view(), name='customer_update'),
     path('api/admin/customers/', views.AdminCustomerListView.as_view(), name='admin_customers'),
     path('api/admin/sellers/', views.AdminSellerListView.as_view(), name='admin_sellers'),
-    path('api/admin/approve-sellers/<int:id>/', views.ApproveSellerView.as_view(), name='approve_seller'),
     path('api/admin/delete-sellers/<int:id>/', views.DeleteSellerView.as_view(), name='delete_seller'),
-    path('api/admin/customerdelete/<int:id>/', views.DeleteCustomerAdminView.as_view(), name='delete_customer'),
+    path('api/admin/customerdelete/<int:pk>/', views.DeleteCustomerAdminView.as_view(), name='delete_customer'),
     path('api/seller/register/', views.RegisterSeller.as_view(), name='register_seller'),
     path('api/seller/profile/', views.sellerprofileview.as_view(), name='seller_profile'),
     path('api/products/', views.ProductViewSet.as_view({'get': 'list', 'post': 'create'}), name='product_list_create'),
@@ -49,7 +47,14 @@ urlpatterns = [
     path('api/admin/delete-product/<int:pk>/',views.AdminDeleteProductView.as_view(),name='admin_products'),
     path('api/products/add/',views. AddProductView.as_view(), name='add-product'),
     path('api/orders/customer/', views.CustomerOrderHistoryView.as_view(),name='customer_orders'),
-
+    path('api/wishlist/',views.WishlistView.as_view(), name='get_wishlist'),
+    path('api/wishlist/toggle/', views.ToggleWishlistView.as_view(), name='toggle_wishlist'),
+    path('api/wishlist/remove/', views.RemoveFromWishlistView.as_view(), name='remove_wishlist'),
+    path('api/reviews/<int:product_id>/', views.ReviewListCreateView.as_view(), name='reviews'),
+    path('api/admin/dashboard/', views.AdminDashboardView.as_view(), name='admin_dashboard'),
+    path('api/admin/revenue-chart/', views.RevenueChartData.as_view(), name='revenue_chart'),
+    path('api/otp/send/', views.SendOTPView.as_view(), name='send_otp'),
+    path('api/otp/verify/', views.VerifyOTPView.as_view(), name='verify otp'),
  ]  
 
 if settings.DEBUG:

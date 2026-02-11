@@ -12,6 +12,10 @@ export class CustomerHComponent implements OnInit {
   editing = false;
   customer: any = null;
   orders: any[] = [];
+
+   otp = '';
+  showOtpBox = false;
+  user: any = {};
   
 
 
@@ -23,14 +27,19 @@ export class CustomerHComponent implements OnInit {
     })
     this.getProfile();
     this.getOrderHistory();
+    this.user.is_verified = this.customer?.is_verified || false;
   }
 
-  getProfile() {
-    this.http.get<any>('http://127.0.0.1:8000/api/customer/profile/').subscribe({
-      next: data => this.customer = data,
+getProfile() {
+  this.http.get<any>('http://127.0.0.1:8000/api/customer/profile/')
+    .subscribe({
+      next: data => {
+        this.customer = data;
+      },
       error: err => console.error('Profile load failed', err)
     });
-  }
+}
+
 
   updateProfile() {
     if (this.customer && this.customer.customer) {
@@ -69,4 +78,27 @@ export class CustomerHComponent implements OnInit {
           }
         });
       }
-    }
+
+       sendOTP() {
+  this.http.post('http://localhost:8000/api/otp/send/', {})
+    .subscribe(() => {
+      alert('OTP sent');
+      this.showOtpBox = true;
+    });
+}
+
+verifyOTP() {
+  this.http.post('http://localhost:8000/api/otp/verify/', {
+    otp: this.otp
+  }).subscribe({
+    next: () => {
+      alert('Account verified');
+      this.showOtpBox = false;
+      this.getProfile(); 
+    },
+    error: () => alert('Invalid OTP')
+  });
+}
+
+
+  }

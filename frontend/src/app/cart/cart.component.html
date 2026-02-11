@@ -1,14 +1,15 @@
-
 <app-header></app-header>
+
 <div class="container mt-5">
 
   <h2 class="mb-4 text-center">Your Cart</h2>
 
   <div *ngIf="cartItems.length === 0" class="alert alert-info text-center">
-    Your cart is empty 🛒
+    Your cart is empty  <a routerLink="/home">Shop now!</a>
   </div>
 
   <div *ngIf="cartItems.length > 0">
+
     <table class="table table-bordered soft-table align-middle">
       <thead class="table-dark">
         <tr>
@@ -17,7 +18,7 @@
           <th>Price (₹)</th>
           <th>Quantity</th>
           <th>Total (₹)</th>
-          <th>remove</th>
+          <th>Remove</th>
         </tr>
       </thead>
 
@@ -28,29 +29,111 @@
           <td>{{ item.price }}</td>
           <td>{{ item.quantity }}</td>
           <td>{{ item.price * item.quantity }}</td>
-          <td> <button class="btn btn-danger btn-sm" (click)="removeFromCart(item.id)">Remove </button> </td>
+          <td>
+            <button
+              class="btn btn-danger btn-sm rounded"
+              (click)="removeFromCart(item.id)"
+            >
+              Remove
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
 
+    <div class="border rounded p-3 mt-3 d-flex align-items-center">
+      <input
+        class="form-check-input me-3"
+        type="checkbox"
+        id="giftWrap"
+        [(ngModel)]="giftWrap"
+      />
+      <label class="form-check-label mb-0" for="giftWrap">
+        Sending this as a gift? We’ve got you covered 
+      </label>
+    </div>
+
+    <!-- ORDER SUMMARY -->
     <div class="row mt-4">
       <div class="col-md-6 offset-md-6">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Order Summary</h5>
+
+            <h5 class="card-title mb-3">Order Summary</h5>
 
             <p class="d-flex justify-content-between">
-              <span>Total Items:</span>
+              <span>Total Items</span>
               <strong>{{ getTotalItems() }}</strong>
             </p>
 
             <p class="d-flex justify-content-between">
-              <span>Total Amount:</span>
-              <strong>₹ {{ getTotalPrice() }}</strong>
+              <span>Subtotal</span>
+              <strong>₹ {{ getSubtotal() }}</strong>
+            </p>
+ 
+
+
+
+<div
+  class="d-flex align-items-center justify-content-between cursor-pointer"
+  (click)="toggleExtraCharges()"
+>
+  <div class="d-flex align-items-center">
+    <span class="me-2 fw-semibold">
+      Extra Charges
+    </span>
+    <span>
+      {{ showExtraCharges ? '▾' : '▸' }}
+    </span>
+  </div>
+
+  <strong>
+    ₹ {{
+      getShippingCharge() +
+      getConvenienceFee() +
+      getGstAmount() +
+      getGiftWrapAmount()
+    }}
+  </strong>
+</div>
+
+<div *ngIf="showExtraCharges" class="mt-2 ps-3 border-start">
+
+  <p class="d-flex justify-content-between mb-1">
+    <span>Shipping</span>
+    <span>₹ {{ getShippingCharge() }}</span>
+  </p>
+
+  <p class="d-flex justify-content-between mb-1">
+    <span>Convenience Fee</span>
+    <span>₹ {{ getConvenienceFee() }}</span>
+  </p>
+
+  <p class="d-flex justify-content-between mb-1">
+    <span>GST</span>
+    <span>₹ {{ getGstAmount() }}</span>
+  </p>
+
+
+</div>
+
+            <p class="d-flex justify-content-between">
+              <span>Gift Wrap</span>
+              <strong>
+                {{ giftWrap ? '₹ ' + giftWrapCharge : 'No' }}
+              </strong>
+            </p>
+
+            <hr>
+
+            <p class="d-flex justify-content-between fs-5">
+              <span><b>Final Amount</b></span>
+              <strong>₹ {{ getPayableAmount() }}</strong>
             </p>
 
             <button
-              class="btn btn-success rounded w-100 mt-3"
+              class="btn btn-success w-100 mt-3 rounded"
+              [disabled]="cartItems.length === 0"
               (click)="purchase()"
             >
               Purchase
@@ -60,6 +143,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
 </div>

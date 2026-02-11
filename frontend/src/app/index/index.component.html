@@ -1,6 +1,94 @@
 <app-header></app-header>
 
-<section id="billboard" class="bg-light py-5 product-carousel">
+<!-- 
+<section class="offer-banner">
+  <div class="offer-content">
+    <h1>New Collection</h1>
+    <h2>Flat 30% Off</h2>
+    <p>Discover the latest arrivals in our store</p>
+    <button class="shop-btn">Shop Now</button>
+  </div>
+
+  <div class="offer-image">
+    <img src="assets/images/cat-large-item3.jpg" alt="New Collection">
+  </div>
+
+ 
+</section> -->
+
+
+<section class="offer-slider banner my-5">
+  <div class="slides">
+    <div class="slides" [style.transform]="'translateX(-' + currentIndex * 100 + '%)'">
+
+
+    <div class="slide c">
+      <div class="offer-content">
+        <h1>New Collection</h1>
+        <h2>Flat 30% Off</h2>
+        <p>Discover the latest arrivals in our store</p>
+        <button class="shop-btn">Shop Now</button>
+      </div>
+      <div class="offer-image rounded">
+        <img src="assets/images/cat-large-item3.jpg" alt="New Collection">
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="offer-content">
+        <h1>Summer Sale</h1>
+        <h2>Up to 50% Off</h2>
+        <p>Limited time offers</p>
+        <button class="shop-btn">Explore</button>
+      </div>
+      <div class="offer-image rounded">
+        <img src="assets/images/cat-large-item2.jpg" alt="Sale">
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="offer-content">
+        <h1>Exclusive Deals</h1>
+        <h2>Buy 1 Get 1</h2>
+        <p>Only for today</p>
+        <button class="shop-btn">Grab Now</button>
+      </div>
+      <div class="offer-image ">
+        <img src="assets/images/cat-large-item1.jpg" alt="Deals">
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <section id="billboard" class="bg-light py-5 product-carousel">
   <div class="container">
 
     <div class="row justify-content-center mb-4">
@@ -29,9 +117,18 @@
                   <a href="#" (click)="addToCart(p.id); $event.preventDefault()"
                      class="text-decoration-none d-block">
                     <span>{{ p.price | currency:'INR' }}</span>
-                    <span class="fw-semibold d-block">Add to cart</span>
+                    <span  *ngIf="userRole === 'customer'&& isLoggedIn" class="fw-semibold d-block">Add to cart</span>
                   </a>
-                </div>
+
+<button
+  *ngIf="userRole === 'customer' && isLoggedIn"
+  class="btn "
+  [ngClass]="isInWishlist(p.id) ? 'btn-danger' : 'btn-outline-danger'"
+  (click)="toggleWishlist(p.id)">
+
+  {{ isInWishlist(p.id) ? 'remove' : 'wishlist' }}
+
+</button>                </div>
 
               </div>
             </div>
@@ -51,7 +148,32 @@
 
     </div>
   </div>
-</section>
+</section> -->
+
+
+
+
+
+
+
+
+            
+            
+
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <section class="product-section py-5 bg-light">
   <div class="container">
@@ -63,20 +185,27 @@
         class="col-xl-3 col-lg-4 col-md-6 col-sm-12"
         *ngFor="let p of products"
       >
-        <div class="product-card">
+        <div class="product-card zoom-hover">
 
           <div class="image-wrapper">
             <a [routerLink]="['/item', p.id]">
-              <img [src]="p.image" />
+              <img [src]="p.image" class="img-fluid w-100" />
             </a>
 
-            <button
+            <button *ngIf="userRole === 'customer'&& isLoggedIn"
               class="add-btn"
               (click)="addToCart(p.id)"
             >
               +
             </button>
           </div>
+
+            <button *ngIf="userRole === 'customer' && isLoggedIn"
+             class="btn btn-sm "
+             (click)="toggleWishlist(p.id)">
+             {{ isInWishlist(p.id) ? 'remove wishlist' : 'wishlist' }}
+             <i class="fa fa-heart"></i>
+            </button>    
 
           <div class="product-info">
             <h6>{{ p.name }}</h6>

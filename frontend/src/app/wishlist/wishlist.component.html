@@ -1,0 +1,58 @@
+<app-header></app-header>
+
+
+<div class="container mt-5">
+
+<h2 class=" text-center">Your Wishlist</h2>
+
+
+ <div *ngIf="wishlistItems.length === 0" class="alert alert-info text-center">
+    Your wishlist is empty  <a routerLink="/home">Shop now!</a>
+  </div>
+
+<div class="container my-4">
+
+  <div
+    class="wishlist-item d-flex align-items-start gap-3 p-3 mb-3"
+    *ngFor="let item of wishlistItems"
+  >
+
+   <img
+  [src]="item.image"
+  alt="{{ item.name }}"
+  class="wishlist-img"
+  (click)="goToItem(item.id)"
+/>
+
+
+    <div class="flex-grow-1">
+      <h6 class="mb-1 wishlist-title">
+        {{ item.name }}
+      </h6>
+
+      <p class="text-muted mb-1 small">
+        ₹ {{ item.price }}
+      </p>
+
+      <div class="d-flex gap-2 flex-wrap">
+        <button
+          class="btn btn-outline-primary btn-sm rounded"
+          (click)="addToCart(item.id)"
+        >
+          Move to Cart
+        </button>
+
+        <button
+          class="btn btn-outline-danger btn-sm rounded"
+          (click)="removeFromWishlist(item.id)"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+<app-footer></app-footer>

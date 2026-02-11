@@ -1,7 +1,8 @@
 # Django
 from django.contrib.auth import authenticate
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Sum
+from django.db.models.functions import TruncMonth
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView
@@ -16,9 +17,11 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import User, Customer, Seller, Product, Cart, CartItem, Order, OrderItem
-from .serializers import CustomerSerializer, SellerSerializer, SellerUpdateSerializer, ProductSerializer, OrderSerializer
-from .permissions import IsSeller
+from .models import User, Customer, Seller, Product, Cart, CartItem, Order, OrderItem, Wishlist, Review,OTP
+from .serializers import CustomerSerializer, SellerSerializer, SellerUpdateSerializer, ProductSerializer, OrderSerializer, ReviewSerializer
+from .permissions import IsSeller, IsCustomer
+from django.core.mail import send_mail
+
 from django.conf import settings
 import logging
 
@@ -102,9 +105,8 @@ class CustomerProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        customer = Customer.objects.get(user=request.user)
         serializer = CustomerSerializer(request.user)
-        return Response(serializer.data)
+        return Response(serializer.data, )
 
 
 class CustomerProfileUpdateView(APIView):
@@ -143,20 +145,7 @@ class AdminSellerListView(APIView):
         serializer = SellerSerializer(sellers, many=True)
         return Response(serializer.data)
     
-class ApproveSellerView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
 
-    def post(self, request, id):
-        if not request.user.is_superuser:
-            return Response({"error": "Unauthorized"}, status=403)
-        try:
-            seller = Seller.objects.get(id=id)
-            seller.is_approved = True
-            seller.save()
-            return Response({"message": "Seller approved successfully"})
-        except Seller.DoesNotExist:
-            return Response({"error": "Seller not found"}, status=404)
         
 class DeleteSellerView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -312,14 +301,22 @@ class ProductDeleteView(APIView):
         product.delete()
         return Response({"message": "Product deleted successfully"})
     
-
 class SellerProductsView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, IsSeller]
 
     def get(self, request):
-        products = Product.objects.filter(seller=request.user.seller_profile)
-        serializer = ProductSerializer(products, many=True, context={'request': request})
+        seller = request.user.seller_profile  
+        products = Product.objects.filter(
+            seller=seller,
+            is_active=True
+        ).order_by('-created_at')
+
+        serializer = ProductSerializer(
+            products,
+            many=True,
+            context={'request': request}
+        )
         return Response(serializer.data)
     
 
@@ -419,7 +416,7 @@ class CheckoutView(APIView):
         )
 
 class AddToCartView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsCustomer]
 
     def post(self, request):
         product_id = request.data.get('product_id')
@@ -515,7 +512,7 @@ class AddProductView(APIView):
         if serializer.is_valid():
             serializer.save(seller=seller)
             return Response(serializer.data, status=201)
-
+        print(serializer.errors)   
         return Response(serializer.errors, status=400)
 
 class CustomerOrderHistoryView(APIView):
@@ -532,3 +529,178 @@ class CustomerOrderHistoryView(APIView):
         except Exception as e:
             logger.error(f"Error in CustomerOrderHistoryView: {e}")
             return Response({"error": "Could not fetch order history."}, status=500)
+
+
+
+
+
+class WishlistView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request):
+        wishlist_items = Wishlist.objects.filter(user=request.user).select_related('product')
+        products = [item.product for item in wishlist_items]
+        serializer = ProductSerializer(products, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+
+    
+
+class ToggleWishlistView(APIView): 
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]  
+
+    def post(self, request):
+        product_id = request.data.get('product_id')
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            return Response({"error": "Product not found"}, status=404)
+
+        wishlist_item, created = Wishlist.objects.get_or_create(
+            user=request.user,
+            product=product
+        )
+
+        if not created:
+            wishlist_item.delete()
+            return Response({"message": "Product removed from wishlist"}, status=200)
+
+        return Response({"message": "Product added to wishlist"}, status=200)
+    
+
+class RemoveFromWishlistView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request):
+        product_id = request.data.get('product_id')
+        try:
+            wishlist_item = Wishlist.objects.get(
+                user=request.user,
+                product__id=product_id
+            )
+            wishlist_item.delete()
+            return Response(
+                {"message": "Product removed from wishlist"},
+                status=status.HTTP_200_OK
+            )
+        except Wishlist.DoesNotExist:
+            return Response(
+                {"error": "Product not found in wishlist"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+
+
+class ReviewListCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request, product_id):
+        product = Product.objects.get(id=product_id)
+
+        review, created = Review.objects.update_or_create(
+            user=request.user,
+            product=product,
+            defaults={
+                'rating': request.data.get('rating'),
+                'comment': request.data.get('comment', '')
+            }
+        )
+
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get(self, request, product_id):
+        reviews = Review.objects.filter(product_id=product_id)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+class AdminDashboardView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request):
+        if not request.user.is_superuser:
+            return Response({"error": "Unauthorized"}, status=403)
+
+        total_customers = User.objects.filter(usertype='customer').count()
+        total_sellers = Seller.objects.count()
+        total_products = Product.objects.count()
+        total_orders = Order.objects.count()
+        total_revenue = Order.objects.filter(status='pending').aggregate(revenue=Sum('total_amount'))['revenue'] or 0
+        pending_products = Product.objects.filter(is_active=False).count()
+
+        stats = {
+            "total_customers": total_customers,
+            "total_sellers": total_sellers,
+            "total_products": total_products,
+            "pending_products": pending_products,
+            "total_orders": total_orders,
+            "total_amount": total_revenue
+        }
+
+        return Response(stats, status=200)
+
+
+
+class RevenueChartData(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request):
+        if not request.user.is_superuser:
+            return Response({"error": "Unauthorized"}, status=403)
+
+        revenue_data = Order.objects.filter(status='pending').annotate(month=TruncMonth('created_at')).values('month').annotate(revenue=Sum('total_amount')).order_by('month')
+
+        labels = [entry['month'].strftime('%B %Y') for entry in revenue_data]
+        values = [entry['revenue'] for entry in revenue_data]
+
+        return Response({
+            "labels": labels,
+            "values": values
+        }, status=200)
+    
+
+
+class SendOTPView(APIView):
+
+    def post(self, request):
+        otp_obj, _ = OTP.objects.get_or_create(user=request.user)
+        otp_obj.generate_otp()
+
+        send_mail(
+            'Your Verification OTP',
+            f'Your OTP is {otp_obj.otp}',
+            'noreply@yourapp.com',
+            [request.user.email],
+            fail_silently=True
+        )
+        print(f"OTP for {request.user.email}: {otp_obj.otp}")  
+
+
+        return Response({'message': 'OTP sent successfully'})
+    
+class VerifyOTPView(APIView):
+
+    def post(self, request):
+        otp_input = request.data.get('otp')
+
+        try:
+            otp_obj = OTP.objects.get(user=request.user)
+        except OTP.DoesNotExist:
+            return Response({'error': 'OTP not found'}, status=400)
+
+        if otp_obj.otp == otp_input:
+            request.user.is_verified = True
+            request.user.save()
+            otp_obj.delete()
+
+            return Response({'message': 'Account verified'})
+        else:
+            return Response({'error': 'Invalid OTP'}, status=400)
