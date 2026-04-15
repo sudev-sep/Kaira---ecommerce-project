@@ -10,7 +10,6 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AuthService {
 
-  // reactive role observable (keeps current role in sync)
   private roleSubject = new BehaviorSubject<string | null>(localStorage.getItem('usertype'));
   role$ = this.roleSubject.asObservable();
 

@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,12 +82,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.parse(os.getenv("DATABASE_URL"))
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -153,11 +163,11 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'sudevanss4@gmail.com'
-EMAIL_HOST_PASSWORD = 'djgr hyil heis bjxs'
+EMAIL_HOST_PASSWORD = 'EMAIL_PASSWORD'  # Use environment variable for security
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 
-RAZORPAY_KEY_ID = "rzp_test_ifqXZb84qSL1CP"
+RAZORPAY_KEY_ID = "RAZORPAY_KEY_ID"
 RAZORPAY_KEY_SECRET = "dummysecret12345"
