@@ -30,7 +30,6 @@ SECRET_KEY = 'django-insecure-q_w+(bm-jtw-@x-sp4_&z=z-6et-jhah=rm1-q(*@f=he=k0mf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -51,6 +50,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -140,6 +140,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = 'myapp.User'
 
+ALLOWED_HOSTS = ['*']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -171,3 +172,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 RAZORPAY_KEY_ID = "RAZORPAY_KEY_ID"
 RAZORPAY_KEY_SECRET = "dummysecret12345"
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
