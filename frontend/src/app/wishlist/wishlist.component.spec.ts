@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { WishlistComponent } from './wishlist.component';
 
@@ -8,7 +9,8 @@ describe('WishlistComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [WishlistComponent]
+      declarations: [WishlistComponent],
+      imports: [HttpClientTestingModule]
     });
     fixture = TestBed.createComponent(WishlistComponent);
     component = fixture.componentInstance;

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewService {
-  private baseUrl = 'http://localhost:8000/api';
+  private baseUrl = 'https://kaira-ecommerce-backend.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
