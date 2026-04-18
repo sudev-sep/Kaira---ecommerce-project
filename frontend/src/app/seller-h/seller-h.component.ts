@@ -35,7 +35,7 @@ export class SellerHComponent {
 
 
   loadProducts() {
-    this.http.get<any[]>('https://kaira-ecommerce-backend.onrender.com/api/seller/profile/products/').subscribe({
+    this.http.get<any[]>('http://127.0.0.1:8000/api/seller/profile/products/').subscribe({
       next: data => this.products = data,
       error: err => console.error('Products load failed', err)
     });
@@ -43,7 +43,7 @@ export class SellerHComponent {
 
 
   getProfile() {
-    this.http.get<any>('https://kaira-ecommerce-backend.onrender.com/api/seller/profile/').subscribe({
+    this.http.get<any>('http://127.0.0.1:8000/api/seller/profile/').subscribe({
       next: data => this.seller = data,
       error: err => console.error('Profile load failed', err)
     });
@@ -64,7 +64,7 @@ export class SellerHComponent {
 
 
   getproduct() {
-      return this.http.get<any[]>('https://kaira-ecommerce-backend.onrender.com/api/seller/profile/products/').subscribe({
+      return this.http.get<any[]>('http://127.0.0.1:8000/api/seller/profile/products/').subscribe({
         next: data => this.products = data,
         error: err => console.error('Products load failed', err)
       });
@@ -73,7 +73,7 @@ export class SellerHComponent {
 
 
   deleteProduct(id: number) {
-    this.http.delete(`https://kaira-ecommerce-backend.onrender.com/api/product/delete/${id}/`)
+    this.http.delete(`http://127.0.0.1:8000/api/product/delete/${id}/`)
       .subscribe({
         next: () => {
           alert('Product deleted successfully!');

@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 })
 export class CartService {
 
-  private apiUrl = 'https://kaira-ecommerce-backend.onrender.com/api/cart/';
+  private apiUrl = 'http://127.0.0.1:8000/api/cart/';
 
   private cartCountSource = new BehaviorSubject<number>(0);
   cartCount$ = this.cartCountSource.asObservable();

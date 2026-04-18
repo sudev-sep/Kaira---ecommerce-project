@@ -27,7 +27,7 @@ export class AdminHComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   role: string | null = null;
 
-  private API_URL = 'https://kaira-ecommerce-backend.onrender.com/api/admin/dashboard/';
+  private API_URL = 'http://127.0.0.1:8000/api/admin/dashboard/';
 
   constructor(
     private http: HttpClient,
@@ -82,7 +82,7 @@ export class AdminHComponent implements OnInit, OnDestroy {
 
   loadRevenueChart() {
     this.http
-      .get<any>('https://kaira-ecommerce-backend.onrender.com/api/admin/revenue-chart/')
+      .get<any>('http://127.0.0.1:8000/api/admin/revenue-chart/')
       .subscribe(res => {
         this.destroyChart();
         this.createChart(res.labels, res.values);
@@ -126,7 +126,7 @@ export class AdminHComponent implements OnInit, OnDestroy {
 
   fetchcustomers() {
     this.http
-      .get<any[]>('https://kaira-ecommerce-backend.onrender.com/api/admin/customers/')
+      .get<any[]>('http://127.0.0.1:8000/api/admin/customers/')
       .subscribe({
         next: data => (this.customers = data),
         error: err => console.error('Failed to load customers', err)
@@ -137,7 +137,7 @@ export class AdminHComponent implements OnInit, OnDestroy {
     if (!confirm('Are you sure you want to delete this customer?')) return;
 
     this.http
-      .delete(`https://kaira-ecommerce-backend.onrender.com/api/admin/customerdelete/${id}/`)
+      .delete(`http://127.0.0.1:8000/api/admin/customerdelete/${id}/`)
       .subscribe({
         next: () => {
           alert('Customer deleted');
@@ -151,7 +151,7 @@ export class AdminHComponent implements OnInit, OnDestroy {
 
   fetchsellers() {
     this.http
-      .get<any[]>('https://kaira-ecommerce-backend.onrender.com/api/admin/sellers/')
+      .get<any[]>('http://127.0.0.1:8000/api/admin/sellers/')
       .subscribe({
         next: data => (this.sellers = data),
         error: err => console.error('Failed to load sellers', err)
@@ -162,7 +162,7 @@ export class AdminHComponent implements OnInit, OnDestroy {
     if (!confirm('Are you sure you want to delete this seller?')) return;
 
     this.http
-      .delete(`https://kaira-ecommerce-backend.onrender.com/api/admin/delete-sellers/${id}/`)
+      .delete(`http://127.0.0.1:8000/api/admin/delete-sellers/${id}/`)
       .subscribe({
         next: () => {
           alert('Seller deleted');
@@ -184,7 +184,7 @@ export class AdminHComponent implements OnInit, OnDestroy {
     };
 
     this.http
-      .get<any[]>('https://kaira-ecommerce-backend.onrender.com/api/admin/products/', { headers })
+      .get<any[]>('http://127.0.0.1:8000/api/admin/products/', { headers })
       .subscribe({
         next: data => (this.products = data),
         error: err => console.error('Products load failed', err)
@@ -198,7 +198,7 @@ export class AdminHComponent implements OnInit, OnDestroy {
 
     this.http
       .post(
-        `https://kaira-ecommerce-backend.onrender.com/api/admin/approve-product/${id}/`,
+        `http://127.0.0.1:8000/api/admin/approve-product/${id}/`,
         {},
         { headers }
       )
@@ -218,7 +218,7 @@ export class AdminHComponent implements OnInit, OnDestroy {
 
     this.http
       .delete(
-        `https://kaira-ecommerce-backend.onrender.com/api/admin/delete-product/${id}/`,
+        `http://127.0.0.1:8000/api/admin/delete-product/${id}/`,
         { headers }
       )
       .subscribe({

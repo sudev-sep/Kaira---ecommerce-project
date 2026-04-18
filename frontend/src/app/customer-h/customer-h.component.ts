@@ -31,7 +31,7 @@ export class CustomerHComponent implements OnInit {
   }
 
 getProfile() {
-  this.http.get<any>('https://kaira-ecommerce-backend.onrender.com/api/customer/profile/')
+  this.http.get<any>('http://127.0.0.1:8000/api/customer/profile/')
     .subscribe({
       next: data => {
         this.customer = data;
@@ -45,7 +45,7 @@ getProfile() {
     if (this.customer && this.customer.customer) {
       delete this.customer.customer.username;
     }
-    this.http.put('https://kaira-ecommerce-backend.onrender.com/api/customer/update/', this.customer).subscribe({
+    this.http.put('http://127.0.0.1:8000/customer/update/', this.customer).subscribe({
       next: () => {
         alert('Profile updated successfully!');
         this.editing = false;
@@ -66,7 +66,7 @@ getProfile() {
   
       getOrderHistory() {
         const token = localStorage.getItem('token'); 
-        this.http.get<any[]>('https://kaira-ecommerce-backend.onrender.com/api/orders/customer/', {
+        this.http.get<any[]>('http://127.0.0.1:8000/api/orders/customer/', {
           headers: { Authorization: `Token ${token}` }
         })
         .subscribe({
@@ -80,7 +80,7 @@ getProfile() {
       }
 
        sendOTP() {
-  this.http.post('https://kaira-ecommerce-backend.onrender.com/api/otp/send/', {})
+  this.http.post('http://127.0.0.1:8000/api/otp/send/', {})
     .subscribe(() => {
       alert('OTP sent');
       this.showOtpBox = true;
@@ -88,7 +88,7 @@ getProfile() {
 }
 
 verifyOTP() {
-  this.http.post('https://kaira-ecommerce-backend.onrender.com/api/otp/verify/', {
+  this.http.post('http://127.0.0.1:8000/api/otp/verify/', {
     otp: this.otp
   }).subscribe({
     next: () => {

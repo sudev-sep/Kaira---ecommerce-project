@@ -7,10 +7,10 @@ import { Observable } from 'rxjs';
 })
 export class ProductService {
 
-  private listUrl = 'https://kaira-ecommerce-backend.onrender.com/api/products/';
-  private editUrl = 'https://kaira-ecommerce-backend.onrender.com/api/product/edit/';
-  private baseUrl = 'https://kaira-ecommerce-backend.onrender.com/api';
-  private addProductUrl = 'https://kaira-ecommerce-backend.onrender.com/api/products/add/';
+  private listUrl = 'http://127.0.0.1:8000/api/products/';
+  private editUrl = 'http://127.0.0.1:8000/api/product/edit/';
+  private baseUrl = 'http://127.0.0.1:8000/api';
+  private addProductUrl = 'http://127.0.0.1:8000/api/products/add/';
 
 
   constructor(private http: HttpClient) {}
@@ -40,7 +40,7 @@ export class ProductService {
 
  
 getProducts(search: string = '') {
-  let url = 'https://kaira-ecommerce-backend.onrender.com/api/products/';
+  let url = 'http://127.0.0.1:8000/api/products/';
 
   if (search) {
     url += `?search=${encodeURIComponent(search)}`;
