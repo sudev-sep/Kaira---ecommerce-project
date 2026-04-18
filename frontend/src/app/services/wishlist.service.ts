@@ -14,19 +14,19 @@ export class WishlistService {
 
 
   getWishlist() {
-    return this.http.get<any[]>('http://127.0.0.1:8000/api/wishlist/');
+    return this.http.get<any[]>('https://kaira-ecommerce-backend.onrender.com/api/wishlist/');
   }
 
   toggleWishlist(productId: number) {
     return this.http.post<any>(
-      'http://127.0.0.1:8000/api/wishlist/toggle/',
+      'https://kaira-ecommerce-backend.onrender.com/api/wishlist/toggle/',
       { product_id: productId }
     );
   }
   
   removeFromWishlist(productId: number) {
     return this.http.post<any>(
-      'http://127.0.0.1:8000/api/wishlist/remove/',
+      'https://kaira-ecommerce-backend.onrender.com/api/wishlist/remove/',
       { product_id: productId }
     );
   }

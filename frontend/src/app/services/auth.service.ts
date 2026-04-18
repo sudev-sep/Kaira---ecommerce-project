@@ -16,19 +16,19 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   registerCustomer(data: any) {
-    return this.http.post('http://127.0.0.1:8000/register/customer/', data);
+    return this.http.post('https://kaira-ecommerce-backend.onrender.com/register/customer/', data);
   }
 
   Login(data:any) {
-    return this.http.post('http://127.0.0.1:8000/login/', data);
+    return this.http.post('https://kaira-ecommerce-backend.onrender.com/login/', data);
   }
 
   getProfile(data:any) {
-    return this.http.get('http://127.0.0.1:8000/api/customer/profile/', data);
+    return this.http.get('https://kaira-ecommerce-backend.onrender.com/api/customer/profile/', data);
   }
 
   updateProfile(data:any) {
-    return this.http.put('http://127.0.0.1:8000/api/customer/update/', data);
+    return this.http.put('https://kaira-ecommerce-backend.onrender.com/api/customer/update/', data);
   }
 
     logout(): void {
@@ -42,12 +42,12 @@ export class AuthService {
 
 
   createSeller(data: any) {
-    return this.http.post('http://127.0.0.1:8000/api/seller/register/',data);
+    return this.http.post('https://kaira-ecommerce-backend.onrender.com/api/seller/register/',data);
 }
 
 
 updatesellerprofile(sellerData: any) {
-  return this.http.put('http://127.0.0.1:8000/api/seller/update/', sellerData, {
+  return this.http.put('https://kaira-ecommerce-backend.onrender.com/api/seller/update/', sellerData, {
     headers: {
       Authorization: `Token ${this.getToken()}`
     }
@@ -59,7 +59,7 @@ getToken(): string | null {
 }
 
 updateProduct(Id: number, productData: any) {
-  return this.http.put(`http://127.0.0.1:8000/api/product/edit/${Id}/`, productData, {
+  return this.http.put(`https://kaira-ecommerce-backend.onrender.com/api/product/edit/${Id}/`, productData, {
     headers: {
       Authorization: `Token ${this.getToken()}`
     }

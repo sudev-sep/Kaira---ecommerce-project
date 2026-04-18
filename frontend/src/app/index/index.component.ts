@@ -114,7 +114,7 @@ export class IndexComponent implements OnInit, AfterViewInit, OnDestroy {
       image: p.image
         ? p.image.startsWith('http')
           ? p.image
-          : `http://127.0.0.1:8000${p.image.startsWith('/') ? '' : '/media/'}${p.image}`
+          : `https://kaira-ecommerce-backend.onrender.com${p.image.startsWith('/') ? '' : '/media/'}${p.image}`
         : 'assets/images/product-placeholder.jpg'
     }));
   }

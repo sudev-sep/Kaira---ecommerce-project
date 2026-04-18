@@ -99,7 +99,7 @@ export class CartComponent implements OnInit {
 
       handler: (response: any) => {
         this.zone.run(() => {
-          this.http.post('http://127.0.0.1:8000/api/checkout/', {
+          this.http.post('https://kaira-ecommerce-backend.onrender.com/api/checkout/', {
             payment_id: response.razorpay_payment_id,
             status: 'success',
 
