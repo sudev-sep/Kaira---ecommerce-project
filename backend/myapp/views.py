@@ -498,23 +498,37 @@ class AdminDeleteProductView(APIView):
             status=200
         )
 
+import cloudinary.uploader
+
 class AddProductView(APIView):
-    permission_classes = [IsAuthenticated, IsSeller]
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
-        seller = request.user.seller_profile   
+        seller = request.user.seller_profile
+
+        image_file = request.FILES.get('image')
+
+        image_url = None
+
+        if image_file:
+            upload_result = cloudinary.uploader.upload(image_file)
+            image_url = upload_result.get('secure_url')  # ✅ IMPORTANT
+
+        data = request.data.copy()
+        data['image'] = image_url
 
         serializer = ProductSerializer(
-            data=request.data,
+            data=data,
             context={'request': request}
         )
 
         if serializer.is_valid():
             serializer.save(seller=seller)
             return Response(serializer.data, status=201)
-        print(serializer.errors)   
-        return Response(serializer.errors, status=400)
 
+        return Response(serializer.errors, status=400)
+    
+    
 class CustomerOrderHistoryView(APIView):
     permission_classes = [IsAuthenticated]
 

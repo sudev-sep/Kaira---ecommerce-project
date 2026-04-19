@@ -94,7 +94,7 @@ class SellerUpdateSerializer(serializers.ModelSerializer):
 # ---------------- PRODUCT ---------------- #
 
 class ProductSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(required=False)
+    image = serializers.URLField(required=False)
     seller = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:

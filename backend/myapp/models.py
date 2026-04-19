@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid,random
 from django.conf import settings
+from cloudinary.models import CloudinaryField
+
 
 class User(AbstractUser):
     usertype = models.CharField(max_length=20, choices=[('customer', 'Customer'), ('seller', 'Seller')])
@@ -45,7 +47,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     short_description = models.CharField(max_length=15000, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    image = models.ImageField(upload_to='products/', null=True, blank=True)
+    image = models.URLField(blank=True, null=True)  # ✅ CHANGE THIS
     stock = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

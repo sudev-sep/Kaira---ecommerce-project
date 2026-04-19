@@ -84,12 +84,18 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+  
+if os.getenv('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -150,10 +156,15 @@ REST_FRAMEWORK = {
 
 import os
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -175,16 +186,55 @@ RAZORPAY_KEY_SECRET = "dummysecret12345"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv("CLOUDINARY_CLOUD_NAME"),
+    'API_KEY': os.getenv("CLOUDINARY_API_KEY"),
+    'API_SECRET': os.getenv("CLOUDINARY_API_SECRET")
+}
+
+# STORAGES = {
+#     "default": {
+#         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+#     },
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
 
 
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-import os
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
-cloudinary.config(
-    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key = os.getenv("CLOUDINARY_API_KEY"),
-    api_secret = os.getenv("CLOUDINARY_API_SECRET")
-)
+EMAIL_HOST_USER = 'sudevanss4@gmail.com'
+EMAIL_HOST_PASSWORD = 'EMAIL_PASSWORD'  # Use environment variable for security
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+
+RAZORPAY_KEY_ID = "RAZORPAY_KEY_ID"
+RAZORPAY_KEY_SECRET = "dummysecret12345"  # Use environment variable
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+
+
+# import cloudinary
+# import cloudinary.uploader
+# import cloudinary.api
+
+
+# cloudinary.config(
+#     cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
+#     api_key = os.getenv("CLOUDINARY_API_KEY"),
+#     api_secret = os.getenv("CLOUDINARY_API_SECRET")
+# )
+
+print("CLOUDINARY NAME:", os.getenv("CLOUDINARY_CLOUD_NAME"))
