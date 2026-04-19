@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import cloudinary
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -84,7 +85,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-  
 if os.getenv('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
@@ -226,15 +226,14 @@ STATIC_URL = '/static/'
 
 
 
-# import cloudinary
-# import cloudinary.uploader
-# import cloudinary.api
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
+import os
 
-# cloudinary.config(
-#     cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
-#     api_key = os.getenv("CLOUDINARY_API_KEY"),
-#     api_secret = os.getenv("CLOUDINARY_API_SECRET")
-# )
-
-print("CLOUDINARY NAME:", os.getenv("CLOUDINARY_CLOUD_NAME"))
+cloudinary.config(
+    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key = os.getenv("CLOUDINARY_API_KEY"),
+    api_secret = os.getenv("CLOUDINARY_API_SECRET")
+)
