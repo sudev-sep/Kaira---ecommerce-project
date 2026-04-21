@@ -112,12 +112,8 @@ class ProductSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def to_representation(self, instance):
-        data = super().to_representation(instance)
-        request = self.context.get('request')
-        if instance.image and request:
-            data['image'] = request.build_absolute_uri(instance.image.url)
-        return data
-
+         data = super().to_representation(instance)
+         return data
 # ---------------- CART ---------------- #
 
 class CartItemSerializer(serializers.ModelSerializer):
