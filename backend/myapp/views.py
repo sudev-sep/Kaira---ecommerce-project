@@ -498,6 +498,8 @@ class AdminDeleteProductView(APIView):
             status=200
         )
 
+
+
 import cloudinary.uploader
 
 class AddProductView(APIView):
@@ -507,12 +509,14 @@ class AddProductView(APIView):
         seller = request.user.seller_profile
 
         image_file = request.FILES.get('image')
-
         image_url = None
 
         if image_file:
-            upload_result = cloudinary.uploader.upload(image_file)
-            image_url = upload_result.get('secure_url')  # ✅ IMPORTANT
+            try:
+                upload_result = cloudinary.uploader.upload(image_file)
+                image_url = upload_result.get('secure_url')
+            except Exception as e:
+                return Response({"error": str(e)}, status=500)
 
         data = request.data.copy()
         data['image'] = image_url
