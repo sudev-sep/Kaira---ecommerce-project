@@ -6,8 +6,7 @@ A scalable, full-stack e-commerce web application built with **Angular** on the 
 
 ## 🚀 Live Demo
 
-[> 🔗 *(Add your deployed link here — e.g., Vercel for frontend, Render/Railway for backend)*
-](https://kaira-ecommerce-frontend-buln7710x-sudevanss4-1474s-projects.vercel.app/login)
+(https://kaira-ecommerce-frontend-buln7710x-sudevanss4-1474s-projects.vercel.app/login)
 ---
 
 ## 📸 Screenshots
